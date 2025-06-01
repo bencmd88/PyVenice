@@ -89,7 +89,7 @@ class ChatCompletionRequest(BaseModel):
     user: Optional[str] = None  # Ignored but supported for OpenAI compatibility
     
     # Function calling parameters
-    parallel_tool_calls: Optional[bool] = True
+    parallel_tool_calls: Optional[bool] = None
     tools: Optional[List[Dict[str, Any]]] = None
     tool_choice: Optional[Union[str, Dict[str, Any]]] = None
     
@@ -221,7 +221,7 @@ class ChatCompletion(BaseResource):
         request = ChatCompletionRequest(**request_data)
         
         # Convert to dict, excluding None values
-        payload = request.dict(exclude_none=True)
+        payload = request.model_dump(exclude_none=True)
         
         if stream:
             return self._create_stream(payload)
@@ -236,21 +236,21 @@ class ChatCompletion(BaseResource):
         """Handle streaming response."""
         response = self.client.post("/chat/completions", payload, stream=True)
         
-        with response as r:
-            for line in r.iter_lines():
-                if not line:
+        # httpx Response doesn't need context manager when streaming
+        for line in response.iter_lines():
+            if not line:
+                continue
+                
+            if line.startswith("data: "):
+                data = line[6:]
+                if data == "[DONE]":
+                    break
+                
+                try:
+                    chunk_data = json.loads(data)
+                    yield ChatCompletionChunk(**chunk_data)
+                except json.JSONDecodeError:
                     continue
-                    
-                if line.startswith(b"data: "):
-                    data = line[6:]
-                    if data == b"[DONE]":
-                        break
-                    
-                    try:
-                        chunk_data = json.loads(data)
-                        yield ChatCompletionChunk(**chunk_data)
-                    except json.JSONDecodeError:
-                        continue
     
     @overload
     async def create_async(
@@ -308,7 +308,7 @@ class ChatCompletion(BaseResource):
         request = ChatCompletionRequest(**request_data)
         
         # Convert to dict, excluding None values
-        payload = request.dict(exclude_none=True)
+        payload = request.model_dump(exclude_none=True)
         
         if stream:
             return self._create_stream_async(payload)
@@ -323,21 +323,21 @@ class ChatCompletion(BaseResource):
         """Handle async streaming response."""
         response = await self.client.post_async("/chat/completions", payload, stream=True)
         
-        async with response as r:
-            async for line in r.aiter_lines():
-                if not line:
+        # Use the response directly for async iteration
+        async for line in response.aiter_lines():
+            if not line:
+                continue
+                
+            if line.startswith("data: "):
+                data = line[6:]
+                if data == "[DONE]":
+                    break
+                
+                try:
+                    chunk_data = json.loads(data)
+                    yield ChatCompletionChunk(**chunk_data)
+                except json.JSONDecodeError:
                     continue
-                    
-                if line.startswith("data: "):
-                    data = line[6:]
-                    if data == "[DONE]":
-                        break
-                    
-                    try:
-                        chunk_data = json.loads(data)
-                        yield ChatCompletionChunk(**chunk_data)
-                    except json.JSONDecodeError:
-                        continue
     
     def create_with_web_search(
         self,
