@@ -83,7 +83,7 @@ class VeniceClient:
         }
         
         if self.enable_compression:
-            headers["Accept-Encoding"] = "gzip, br"
+            headers["Accept-Encoding"] = "gzip"
             
         return headers
     

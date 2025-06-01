@@ -252,10 +252,8 @@ class Models(BaseResource):
         
         response = self.client.get("/models/compatibility_mapping")
         
-        # Convert response to simple mapping dictionary
-        self._compatibility_cache = {}
-        for item in response.get("data", []):
-            self._compatibility_cache[item["original_model"]] = item["mapped_model"]
+        # The data is already a dictionary mapping
+        self._compatibility_cache = response.get("data", {})
         
         return self._compatibility_cache
     
