@@ -140,3 +140,82 @@ response = chat.create(
     parallel_tool_calls=True  # Removed if model doesn't support it
 )
 ```
+
+## Session 2 Updates (Debugging & Fixes)
+
+### Issues Encountered and Fixed
+
+1. **Installation Issue**: The package wasn't importable after `pip install -e .`
+   - **Fix**: Added build system configuration to `pyproject.toml`:
+   ```toml
+   [build-system]
+   requires = ["setuptools", "wheel"]
+   build-backend = "setuptools.build_meta"
+   
+   [tool.setuptools]
+   packages = ["menace"]
+   ```
+
+2. **Encoding Error**: `UnicodeDecodeError: 'utf-8' codec can't decode byte 0xc6`
+   - **Cause**: Venice.ai API supports brotli compression (`br`), but httpx had issues decoding it
+   - **Fix**: Limited `Accept-Encoding` header to only request `gzip` compression in `client.py`:
+   ```python
+   headers["Accept-Encoding"] = "gzip"  # Changed from "gzip, br"
+   ```
+
+3. **Compatibility Mapping Error**: `TypeError: string indices must be integers`
+   - **Cause**: The `/models/compatibility_mapping` endpoint returns `data` as a dict, not a list
+   - **Fix**: Updated `models.py` to handle dict response:
+   ```python
+   self._compatibility_cache = response.get("data", {})  # Was iterating as list
+   ```
+
+4. **Parameter Validation Issue**: `parallel_tool_calls is not supported by this model`
+   - **Cause**: `parallel_tool_calls` had a default value of `True`, so it was always sent
+   - **Fix**: Changed default to `None` in `chat.py`:
+   ```python
+   parallel_tool_calls: Optional[bool] = None  # Was = True
+   ```
+
+5. **Streaming Issues**: 
+   - Context manager error and bytes vs string issues
+   - **Fix**: Removed unnecessary context manager and fixed string handling in streaming
+
+### Current Status
+
+✅ All endpoints implemented and working:
+- Chat completions (with automatic parameter filtering)
+- Models listing and capability checking
+- Image generation and upscaling
+- Embeddings
+- Audio/TTS
+- API key management
+- Characters
+- Billing
+
+✅ Key features working:
+- Automatic removal of unsupported parameters based on model capabilities
+- Both sync and async support
+- Streaming responses
+- Web search integration
+- Compression handling (gzip only)
+
+### Testing the Library
+
+```bash
+# Set your API key
+export VENICE_API_KEY='your-actual-api-key'
+
+# Test with simple example
+python src/simple_example.py
+
+# Test all features
+python src/example_usage.py
+```
+
+### Important Notes
+
+- The library requires a valid Venice.ai API key to work
+- Models endpoint works without auth for listing, but chat/image generation requires valid API key
+- The library automatically handles the edge case of removing parameters like `parallel_tool_calls` for models that don't support them
+- Only gzip compression is used (not brotli) to avoid encoding issues
