@@ -11,12 +11,15 @@ from .models import Models
 
 class EmbeddingRequest(BaseModel):
     """Request model for creating embeddings."""
+
     input: Union[str, List[str], List[int], List[List[int]]]
     model: str
-    dimensions: Optional[int] = Field(None, ge=1, description="Number of dimensions for output")
+    dimensions: Optional[int] = Field(
+        None, ge=1, description="Number of dimensions for output"
+    )
     encoding_format: Literal["float", "base64"] = "float"
-    
-    @validator('input')
+
+    @validator("input")
     def validate_input(cls, v):
         if isinstance(v, str) and len(v) == 0:
             raise ValueError("Input string cannot be empty")
@@ -30,6 +33,7 @@ class EmbeddingRequest(BaseModel):
 
 class EmbeddingObject(BaseModel):
     """Single embedding object in response."""
+
     embedding: Union[List[float], str]  # List of floats or base64 string
     index: int
     object: Literal["embedding"] = "embedding"
@@ -37,6 +41,7 @@ class EmbeddingObject(BaseModel):
 
 class EmbeddingResponse(BaseModel):
     """Response from embeddings endpoint."""
+
     data: List[EmbeddingObject]
     model: str
     object: Literal["list"] = "list"
@@ -46,15 +51,15 @@ class EmbeddingResponse(BaseModel):
 class Embeddings(BaseResource):
     """
     Interface for Venice.ai embeddings endpoint.
-    
+
     Creates embeddings for text inputs using embedding models.
     This is a beta feature accessible to Venice beta testers.
     """
-    
+
     def __init__(self, client: VeniceClient):
         super().__init__(client)
         self.models = Models(client)
-    
+
     def create(
         self,
         input: Union[str, List[str], List[int], List[List[int]]],
@@ -64,29 +69,29 @@ class Embeddings(BaseResource):
     ) -> EmbeddingResponse:
         """
         Create embeddings for the given input.
-        
+
         Args:
             input: Text string(s) or token arrays to embed.
             model: The embedding model to use.
             dimensions: Number of dimensions for the output embeddings.
             encoding_format: Format for the embeddings (float or base64).
-            
+
         Returns:
             EmbeddingResponse containing the embeddings.
         """
         # Map model name if needed
         model = self.models.map_model_name(model)
-        
+
         request = EmbeddingRequest(
             input=input,
             model=model,
             dimensions=dimensions,
             encoding_format=encoding_format,
         )
-        
+
         response = self.client.post("/embeddings", request.dict(exclude_none=True))
         return EmbeddingResponse(**response)
-    
+
     async def create_async(
         self,
         input: Union[str, List[str], List[int], List[List[int]]],
@@ -96,17 +101,19 @@ class Embeddings(BaseResource):
     ) -> EmbeddingResponse:
         """Async version of create()."""
         model = self.models.map_model_name(model)
-        
+
         request = EmbeddingRequest(
             input=input,
             model=model,
             dimensions=dimensions,
             encoding_format=encoding_format,
         )
-        
-        response = await self.client.post_async("/embeddings", request.dict(exclude_none=True))
+
+        response = await self.client.post_async(
+            "/embeddings", request.dict(exclude_none=True)
+        )
         return EmbeddingResponse(**response)
-    
+
     def create_batch(
         self,
         texts: List[str],
@@ -116,13 +123,13 @@ class Embeddings(BaseResource):
     ) -> List[List[float]]:
         """
         Convenience method to create embeddings for multiple texts.
-        
+
         Args:
             texts: List of text strings to embed.
             model: The embedding model to use.
             dimensions: Number of dimensions for the output embeddings.
             encoding_format: Format for the embeddings.
-            
+
         Returns:
             List of embedding vectors in the same order as input texts.
         """
@@ -132,10 +139,10 @@ class Embeddings(BaseResource):
             dimensions=dimensions,
             encoding_format=encoding_format,
         )
-        
+
         # Sort by index to ensure correct order
         sorted_data = sorted(response.data, key=lambda x: x.index)
-        
+
         # Extract embeddings
         if encoding_format == "float":
             return [item.embedding for item in sorted_data]

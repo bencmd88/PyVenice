@@ -38,13 +38,13 @@ def mock_models_response():
                         "supportsResponseSchema": False,
                         "supportsVision": False,
                         "supportsWebSearch": True,
-                        "supportsLogProbs": False
+                        "supportsLogProbs": False,
                     },
                     "description": "Venice's uncensored model",
-                    "humanName": "Venice Uncensored"
+                    "humanName": "Venice Uncensored",
                 },
                 "object": "model",
-                "owned_by": "venice"
+                "owned_by": "venice",
             },
             {
                 "created": 1742262554,
@@ -60,17 +60,17 @@ def mock_models_response():
                         "supportsResponseSchema": True,
                         "supportsVision": False,
                         "supportsWebSearch": False,
-                        "supportsLogProbs": True
+                        "supportsLogProbs": True,
                     },
                     "description": "Qwen reasoning model",
-                    "humanName": "Qwen QwQ 32B"
+                    "humanName": "Qwen QwQ 32B",
                 },
                 "object": "model",
-                "owned_by": "qwen"
-            }
+                "owned_by": "qwen",
+            },
         ],
         "object": "list",
-        "type": "text"
+        "type": "text",
     }
 
 
@@ -87,17 +87,13 @@ def mock_chat_response():
                 "index": 0,
                 "message": {
                     "role": "assistant",
-                    "content": "Hello! How can I help you today?"
+                    "content": "Hello! How can I help you today?",
                 },
                 "finish_reason": "stop",
-                "logprobs": None
+                "logprobs": None,
             }
         ],
-        "usage": {
-            "prompt_tokens": 10,
-            "completion_tokens": 15,
-            "total_tokens": 25
-        }
+        "usage": {"prompt_tokens": 10, "completion_tokens": 15, "total_tokens": 25},
     }
 
 
@@ -106,13 +102,15 @@ def mock_image_response():
     """Mock response for /image/generate endpoint."""
     return {
         "id": "generate-image-test123",
-        "images": ["iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChAGA0"],
+        "images": [
+            "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChAGA0"
+        ],
         "timing": {
             "inferenceDuration": 2500,
             "inferencePreprocessingTime": 100,
             "inferenceQueueTime": 50,
-            "total": 2650
-        }
+            "total": 2650,
+        },
     }
 
 
@@ -123,10 +121,10 @@ def mock_compatibility_mapping():
         "data": {
             "gpt-4o": "venice-uncensored",
             "gpt-3.5-turbo": "qwen-2.5-qwq-32b",
-            "claude-3-5-sonnet": "venice-uncensored"
+            "claude-3-5-sonnet": "venice-uncensored",
         },
         "object": "list",
-        "type": "text"
+        "type": "text",
     }
 
 
@@ -138,15 +136,12 @@ def mock_embedding_response():
             {
                 "object": "embedding",
                 "embedding": [0.1, 0.2, 0.3, -0.1, -0.2],
-                "index": 0
+                "index": 0,
             }
         ],
         "model": "text-embedding-3-small",
         "object": "list",
-        "usage": {
-            "prompt_tokens": 5,
-            "total_tokens": 5
-        }
+        "usage": {"prompt_tokens": 5, "total_tokens": 5},
     }
 
 
@@ -165,10 +160,10 @@ def mock_characters_response():
                 "id": "venice-assistant-123",
                 "slug": "venice",
                 "tags": ["helpful", "assistant"],
-                "updatedAt": "2024-12-20T21:28:08.934Z"
+                "updatedAt": "2024-12-20T21:28:08.934Z",
             }
         ],
-        "object": "list"
+        "object": "list",
     }
 
 
@@ -184,19 +179,14 @@ def mock_billing_response():
                     "completionTokens": 15,
                     "promptTokens": 10,
                     "modelId": "venice-uncensored",
-                    "elapsedMs": 1500
+                    "elapsedMs": 1500,
                 },
                 "inferenceId": "test-inference-123",
                 "createdAt": "2024-12-20T21:28:08.934Z",
-                "service": "chat"
+                "service": "chat",
             }
         ],
-        "pagination": {
-            "page": 1,
-            "limit": 200,
-            "total": 1,
-            "total_pages": 1
-        }
+        "pagination": {"page": 1, "limit": 200, "total": 1, "total_pages": 1},
     }
 
 
@@ -226,12 +216,7 @@ def mock_400_error():
     """Mock 400 error response."""
     return {
         "error": "Invalid request parameters",
-        "details": {
-            "_errors": [],
-            "model": {
-                "_errors": ["Model is required"]
-            }
-        }
+        "details": {"_errors": [], "model": {"_errors": ["Model is required"]}},
     }
 
 
@@ -262,6 +247,6 @@ def mock_streaming_response():
         'data: {"id":"chatcmpl-test","object":"chat.completion.chunk","created":1742262554,"model":"venice-uncensored","choices":[{"index":0,"delta":{"content":" there"}}]}',
         'data: {"id":"chatcmpl-test","object":"chat.completion.chunk","created":1742262554,"model":"venice-uncensored","choices":[{"index":0,"delta":{"content":"!"}}]}',
         'data: {"id":"chatcmpl-test","object":"chat.completion.chunk","created":1742262554,"model":"venice-uncensored","choices":[{"index":0,"finish_reason":"stop"}]}',
-        'data: [DONE]'
+        "data: [DONE]",
     ]
     return "\n".join(chunks)

@@ -6,6 +6,7 @@ Simple example showing how to use the pyvenice library.
 import os
 from pyvenice import VeniceClient, ChatCompletion, Models
 
+
 def main():
     # Check for API key
     api_key = os.environ.get("VENICE_API_KEY")
@@ -18,45 +19,47 @@ def main():
         print("3. Run this script again")
         print("\nUsing a test key for demonstration (will likely fail)...")
         api_key = "test-api-key-12345"
-    
+
     print("Initializing Venice.ai client...")
-    
+
     try:
         # Initialize client
         client = VeniceClient(api_key=api_key)
-        
+
         # List available models
         print("\nFetching available models...")
         models = Models(client)
         model_list = models.list(type="text")
-        
+
         print(f"\nFound {len(model_list.data)} text models. Here are the first 5:")
         for model in model_list.data[:5]:
             print(f"  - {model.id}")
-        
+
         # Simple chat example
         print("\nTesting chat completion...")
         chat = ChatCompletion(client)
-        
+
         response = chat.create(
             model="venice-uncensored",
-            messages=[
-                {"role": "user", "content": "Say 'Hello, World!' in Python"}
-            ]
+            messages=[{"role": "user", "content": "Say 'Hello, World!' in Python"}],
         )
-        
+
         print("\nChat response:")
-        print(response.choices[0].message['content'])
-        
+        print(response.choices[0].message["content"])
+
     except Exception as e:
         print(f"\nError occurred: {type(e).__name__}: {e}")
-        print("\nMake sure your API key is valid and you have access to the Venice.ai API.")
+        print(
+            "\nMake sure your API key is valid and you have access to the Venice.ai API."
+        )
         import traceback
+
         traceback.print_exc()
     finally:
-        if 'client' in locals():
+        if "client" in locals():
             client.close()
             print("\nClient closed.")
+
 
 if __name__ == "__main__":
     main()

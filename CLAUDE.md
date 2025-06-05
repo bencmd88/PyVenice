@@ -19,11 +19,15 @@ The library implements a **decorator-based validation pattern** that requires un
 
 ```bash
 # Development setup
-pip install -e .              # Install package in editable mode
+source .venv/bin/activate      # Activate uv virtual environment
 pip install -e .[dev]         # Include test dependencies
 
-# Testing
+# Code quality
+ruff check .                   # Run linting checks
+ruff check --fix .            # Fix auto-fixable linting issues
 pytest tests/ -m "not integration" --cov=pyvenice --cov-report=term-missing  # Unit tests with coverage
+
+# Testing
 pytest tests/test_chat.py -v  # Run specific test module
 pytest --cov=pyvenice --cov-report=html  # Generate HTML coverage report
 
