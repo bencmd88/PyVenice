@@ -3,6 +3,12 @@ Example usage of the menace Venice.ai API client library.
 """
 
 import os
+import sys
+from pathlib import Path
+
+# Add the parent directory to Python path to find the menace package
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
 from menace import VeniceClient, ChatCompletion, ImageGeneration, Models
 
 # Initialize client - requires VENICE_API_KEY environment variable
@@ -81,6 +87,26 @@ def example_image_generation():
             f.write(image_data)
         print("Image saved as generated_image.webp")
 
+def multiple_images():
+    image_gen = ImageGeneration(client)
+    
+    styles = image_gen.list_styles()
+    
+    for style in styles:
+        response = image_gen.generate(
+            prompt="A petite 22-year-old blonde woman with fair skin and blue eyes wearing a suit of nanotech body armour in a desert setting",
+            model="flux-dev",
+            style_preset=style,
+            width=1024,
+            height=1024
+        )
+    
+        if response.images:
+            import base64
+            image_data = base64.b64decode(response.images[0])
+            with open(f"image_{style}.webp", "wb") as f:
+                f.write(image_data)
+            print(f"image_{style}.webp generated.")
 
 def example_streaming():
     """Example of streaming chat responses."""
@@ -98,7 +124,6 @@ def example_streaming():
             print(chunk.choices[0]['delta']['content'], end='', flush=True)
     print()  # New line at end
 
-
 if __name__ == "__main__":
     # Check for API key
     if not os.environ.get("VENICE_API_KEY"):
@@ -108,10 +133,7 @@ if __name__ == "__main__":
     print("=== Venice.ai API Examples ===\n")
     
     try:
-        example_models()
-        example_chat()
-        example_image_generation()
-        example_streaming()
+        multiple_images()
     except Exception as e:
         print(f"\nError: {e}")
     finally:
