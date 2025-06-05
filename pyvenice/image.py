@@ -5,7 +5,7 @@ Image generation, styles, and upscaling endpoints for Venice.ai API.
 import base64
 from typing import Optional, List, Dict, Any, Union, Literal, BinaryIO
 from pathlib import Path
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator, model_validator
 
 from .client import BaseResource, VeniceClient
 from .models import Models
@@ -55,7 +55,8 @@ class OpenAIImageRequest(BaseModel):
     style: Optional[Literal["vivid", "natural"]] = "natural"
     user: Optional[str] = None
 
-    @validator("size")
+    @field_validator("size")
+    @classmethod
     def validate_size(cls, v):
         valid_sizes = {
             "auto",
@@ -84,11 +85,12 @@ class UpscaleImageRequest(BaseModel):
     replication: float = Field(0.35, ge=0.1, le=1)
     scale: float = Field(2, ge=1, le=4)
 
-    @validator("enhance")
-    def validate_enhance(cls, v, values):
-        if "scale" in values and values["scale"] == 1 and not v:
+    @model_validator(mode='after')
+    def validate_enhance_with_scale(self):
+        """Validate that enhance must be true when scale is 1."""
+        if self.scale == 1 and not self.enhance:
             raise ValueError("enhance must be true when scale is 1")
-        return v
+        return self
 
 
 class ImageGenerationResponse(BaseModel):
@@ -179,7 +181,7 @@ class ImageGeneration(BaseResource):
             **kwargs,
         )
 
-        response = self.client.post("/image/generate", request.dict(exclude_none=True))
+        response = self.client.post("/image/generate", request.model_dump(exclude_none=True))
 
         # Check response headers for content violations
         if hasattr(response, "headers"):
@@ -227,7 +229,7 @@ class ImageGeneration(BaseResource):
         )
 
         response = self.client.post(
-            "/images/generations", request.dict(exclude_none=True)
+            "/images/generations", request.model_dump(exclude_none=True)
         )
         return OpenAIImageResponse(**response)
 
@@ -240,7 +242,7 @@ class ImageGeneration(BaseResource):
         request = GenerateImageRequest(model=model, prompt=prompt, **kwargs)
 
         response = await self.client.post_async(
-            "/image/generate", request.dict(exclude_none=True)
+            "/image/generate", request.model_dump(exclude_none=True)
         )
         return ImageGenerationResponse(**response)
 
@@ -308,7 +310,7 @@ class ImageGeneration(BaseResource):
         response = self.client._request(
             "POST",
             "/image/upscale",
-            data=request.dict(exclude_none=True),
+            data=request.model_dump(exclude_none=True),
             headers=headers,
             stream=True,
         )
@@ -334,7 +336,7 @@ class ImageGeneration(BaseResource):
         response = await self.client._request_async(
             "POST",
             "/image/upscale",
-            data=request.dict(exclude_none=True),
+            data=request.model_dump(exclude_none=True),
             headers=headers,
             stream=True,
         )

@@ -3,7 +3,7 @@ Embeddings endpoint wrapper for Venice.ai API.
 """
 
 from typing import Union, List, Optional, Literal
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator
 
 from .client import BaseResource, VeniceClient
 from .models import Models
@@ -19,7 +19,8 @@ class EmbeddingRequest(BaseModel):
     )
     encoding_format: Literal["float", "base64"] = "float"
 
-    @validator("input")
+    @field_validator("input")
+    @classmethod
     def validate_input(cls, v):
         if isinstance(v, str) and len(v) == 0:
             raise ValueError("Input string cannot be empty")
@@ -89,7 +90,7 @@ class Embeddings(BaseResource):
             encoding_format=encoding_format,
         )
 
-        response = self.client.post("/embeddings", request.dict(exclude_none=True))
+        response = self.client.post("/embeddings", request.model_dump(exclude_none=True))
         return EmbeddingResponse(**response)
 
     async def create_async(
@@ -110,7 +111,7 @@ class Embeddings(BaseResource):
         )
 
         response = await self.client.post_async(
-            "/embeddings", request.dict(exclude_none=True)
+            "/embeddings", request.model_dump(exclude_none=True)
         )
         return EmbeddingResponse(**response)
 

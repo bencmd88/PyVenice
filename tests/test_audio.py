@@ -149,7 +149,7 @@ class TestAudio:
         )
 
         audio = Audio(client)
-        stream = audio.create_speech_streaming(input="Test streaming", voice="alloy")
+        stream = audio.create_speech_streaming(input="Test streaming", voice="af_alloy")
 
         # Collect all chunks
         collected_chunks = b""
@@ -172,7 +172,7 @@ class TestAudio:
         )
 
         audio = Audio(client)
-        response = await audio.create_speech_async(input="Async test", voice="shimmer")
+        response = await audio.create_speech_async(input="Async test", voice="af_sky")
 
         assert response == fake_audio_data
 
@@ -197,7 +197,7 @@ class TestAudio:
 
         audio = Audio(client)
         stream = await audio.create_speech_streaming_async(
-            input="Async streaming test", voice="fable"
+            input="Async streaming test", voice="am_fable"
         )
 
         # Collect all chunks
@@ -226,21 +226,21 @@ class TestSpeechRequest:
         """Test valid request with all parameters."""
         request = SpeechRequest(
             input="Test with all parameters",
-            voice="nova",
-            model="tts-1-hd",
+            voice="af_nova",
+            model="tts-kokoro",
             response_format="wav",
             speed=1.25,
         )
 
         assert request.input == "Test with all parameters"
-        assert request.voice == "nova"
-        assert request.model == "tts-1-hd"
+        assert request.voice == "af_nova"
+        assert request.model == "tts-kokoro"
         assert request.response_format == "wav"
         assert request.speed == 1.25
 
     def test_voice_validation_valid(self):
         """Test valid voice values."""
-        valid_voices = ["alloy", "echo", "fable", "onyx", "nova", "shimmer"]
+        valid_voices = ["af_alloy", "am_echo", "am_fable", "am_onyx", "af_nova", "af_sky"]
 
         for voice in valid_voices:
             request = SpeechRequest(input="Test", voice=voice)
@@ -258,7 +258,7 @@ class TestSpeechRequest:
         valid_formats = ["mp3", "opus", "aac", "flac", "wav", "pcm"]
 
         for format in valid_formats:
-            request = SpeechRequest(input="Test", voice="alloy", response_format=format)
+            request = SpeechRequest(input="Test", voice="af_alloy", response_format=format)
             assert request.response_format == format
 
     def test_response_format_validation_invalid(self):
@@ -266,26 +266,26 @@ class TestSpeechRequest:
         from pydantic import ValidationError
 
         with pytest.raises(ValidationError):
-            SpeechRequest(input="Test", voice="alloy", response_format="invalid_format")
+            SpeechRequest(input="Test", voice="af_alloy", response_format="invalid_format")
 
     def test_speed_validation_bounds(self):
         """Test speed validation bounds."""
         from pydantic import ValidationError
 
         # Valid speeds
-        request1 = SpeechRequest(input="Test", voice="alloy", speed=0.25)
+        request1 = SpeechRequest(input="Test", voice="af_alloy", speed=0.25)
         assert request1.speed == 0.25
 
-        request2 = SpeechRequest(input="Test", voice="alloy", speed=4.0)
+        request2 = SpeechRequest(input="Test", voice="af_alloy", speed=4.0)
         assert request2.speed == 4.0
 
         # Invalid speeds (too low)
         with pytest.raises(ValidationError):
-            SpeechRequest(input="Test", voice="alloy", speed=0.1)
+            SpeechRequest(input="Test", voice="af_alloy", speed=0.1)
 
         # Invalid speeds (too high)
         with pytest.raises(ValidationError):
-            SpeechRequest(input="Test", voice="alloy", speed=5.0)
+            SpeechRequest(input="Test", voice="af_alloy", speed=5.0)
 
     def test_input_validation_length(self):
         """Test input text length validation."""
@@ -293,20 +293,20 @@ class TestSpeechRequest:
 
         # Valid length (exactly 4096 characters)
         long_text = "a" * 4096
-        request = SpeechRequest(input=long_text, voice="alloy")
+        request = SpeechRequest(input=long_text, voice="af_alloy")
         assert len(request.input) == 4096
 
         # Invalid length (too long)
         too_long_text = "a" * 4097
         with pytest.raises(ValidationError):
-            SpeechRequest(input=too_long_text, voice="alloy")
+            SpeechRequest(input=too_long_text, voice="af_alloy")
 
     def test_input_validation_empty(self):
         """Test input validation with empty string."""
         from pydantic import ValidationError
 
         with pytest.raises(ValidationError):
-            SpeechRequest(input="", voice="alloy")
+            SpeechRequest(input="", voice="af_alloy")
 
 
 @pytest.mark.unit
@@ -350,7 +350,7 @@ class TestErrorHandling:
 
         # The validation should happen at the request level
         try:
-            audio.create_speech(input=long_text, voice="alloy")
+            audio.create_speech(input=long_text, voice="af_alloy")
             assert False, "Should have raised an exception"
         except Exception as e:
             # Either ValidationError from pydantic or API error
@@ -410,7 +410,7 @@ class TestAudioIntegration:
 
         response = audio.create_speech(
             input="Hello, this is a test of the Venice AI text-to-speech system.",
-            voice="alloy",
+            voice="af_alloy",
         )
 
         # Should return bytes of audio data
@@ -427,7 +427,7 @@ class TestAudioIntegration:
         audio = Audio(client)
 
         stream = audio.create_speech_streaming(
-            input="This is a streaming test.", voice="nova"
+            input="This is a streaming test.", voice="af_nova"
         )
 
         # Collect all chunks
@@ -447,7 +447,7 @@ class TestAudioIntegration:
         client = VeniceClient(api_key=integration_api_key)
         audio = Audio(client)
 
-        voices_to_test = ["alloy", "echo", "nova"]
+        voices_to_test = ["af_alloy", "am_echo", "af_nova"]
         audio_responses = {}
 
         for voice in voices_to_test:
@@ -461,8 +461,8 @@ class TestAudioIntegration:
 
         # Different voices should produce different audio data
         # (Though this isn't guaranteed, it's likely for different voice models)
-        alloy_data = audio_responses["alloy"]
-        echo_data = audio_responses["echo"]
+        alloy_data = audio_responses["af_alloy"]
+        echo_data = audio_responses["am_echo"]
 
         # They shouldn't be completely identical
         assert alloy_data != echo_data
@@ -479,7 +479,7 @@ class TestAudioIntegration:
         for format_type in formats_to_test:
             response = audio.create_speech(
                 input=f"Testing {format_type} format.",
-                voice="alloy",
+                voice="af_alloy",
                 response_format=format_type,
             )
 

@@ -99,6 +99,7 @@ class Billing(BaseResource):
             "/billing/usage",
             params=params,
             headers=headers,
+            stream=True,
         )
 
         if format == "csv":
@@ -107,17 +108,17 @@ class Billing(BaseResource):
             # Extract pagination from headers if available
             pagination = {}
             if hasattr(response, "headers"):
-                headers = response.headers
-                if "x-pagination-page" in headers:
-                    pagination["page"] = int(headers["x-pagination-page"])
-                if "x-pagination-limit" in headers:
-                    pagination["limit"] = int(headers["x-pagination-limit"])
-                if "x-pagination-total" in headers:
-                    pagination["total"] = int(headers["x-pagination-total"])
-                if "x-pagination-total-pages" in headers:
-                    pagination["total_pages"] = int(headers["x-pagination-total-pages"])
+                response_headers = response.headers
+                if "x-pagination-page" in response_headers:
+                    pagination["page"] = int(response_headers["x-pagination-page"])
+                if "x-pagination-limit" in response_headers:
+                    pagination["limit"] = int(response_headers["x-pagination-limit"])
+                if "x-pagination-total" in response_headers:
+                    pagination["total"] = int(response_headers["x-pagination-total"])
+                if "x-pagination-total-pages" in response_headers:
+                    pagination["total_pages"] = int(response_headers["x-pagination-total-pages"])
 
-            result = response if isinstance(response, dict) else response.json()
+            result = response.json()
             result["pagination"] = pagination
             return UsageResponse(**result)
 
@@ -155,6 +156,7 @@ class Billing(BaseResource):
             "/billing/usage",
             params=params,
             headers=headers,
+            stream=True,
         )
 
         if format == "csv":
@@ -163,17 +165,17 @@ class Billing(BaseResource):
             # Extract pagination from headers if available
             pagination = {}
             if hasattr(response, "headers"):
-                headers = response.headers
-                if "x-pagination-page" in headers:
-                    pagination["page"] = int(headers["x-pagination-page"])
-                if "x-pagination-limit" in headers:
-                    pagination["limit"] = int(headers["x-pagination-limit"])
-                if "x-pagination-total" in headers:
-                    pagination["total"] = int(headers["x-pagination-total"])
-                if "x-pagination-total-pages" in headers:
-                    pagination["total_pages"] = int(headers["x-pagination-total-pages"])
+                response_headers = response.headers
+                if "x-pagination-page" in response_headers:
+                    pagination["page"] = int(response_headers["x-pagination-page"])
+                if "x-pagination-limit" in response_headers:
+                    pagination["limit"] = int(response_headers["x-pagination-limit"])
+                if "x-pagination-total" in response_headers:
+                    pagination["total"] = int(response_headers["x-pagination-total"])
+                if "x-pagination-total-pages" in response_headers:
+                    pagination["total_pages"] = int(response_headers["x-pagination-total-pages"])
 
-            result = response if isinstance(response, dict) else response.json()
+            result = response.json()
             result["pagination"] = pagination
             return UsageResponse(**result)
 

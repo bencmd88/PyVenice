@@ -15,7 +15,7 @@ from typing import (
     TypedDict,
     overload,
 )
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator
 
 from .client import BaseResource, VeniceClient
 from .models import Models
@@ -129,7 +129,8 @@ class ChatCompletionRequest(BaseModel):
     # Reasoning parameters
     reasoning_effort: Optional[str] = None
 
-    @validator("stop")
+    @field_validator("stop")
+    @classmethod
     def validate_stop(cls, v):
         if isinstance(v, list) and len(v) > 4:
             raise ValueError("Maximum 4 stop sequences allowed")
@@ -374,7 +375,7 @@ class ChatCompletion(BaseResource):
         """
         venice_params = kwargs.get("venice_parameters", {})
         if isinstance(venice_params, VeniceParameters):
-            venice_params = venice_params.dict()
+            venice_params = venice_params.model_dump()
 
         venice_params.update(
             {

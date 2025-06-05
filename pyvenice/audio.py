@@ -4,7 +4,7 @@ Audio/Speech endpoints wrapper for Venice.ai API.
 
 from typing import Optional, Literal, Union, Generator, AsyncGenerator
 from pathlib import Path
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator
 
 from .client import BaseResource, VeniceClient
 from .models import Models
@@ -50,7 +50,8 @@ class SpeechRequest(BaseModel):
     speed: float = Field(1.0, ge=0.25, le=4.0)
     streaming: bool = False
 
-    @validator("voice")
+    @field_validator("voice")
+    @classmethod
     def validate_voice(cls, v):
         if v not in ALL_VOICES:
             raise ValueError(f"Invalid voice. Must be one of: {', '.join(ALL_VOICES)}")
@@ -104,12 +105,12 @@ class Audio(BaseResource):
         headers = {"Accept": self._get_audio_content_type(response_format)}
 
         if streaming:
-            return self._stream_speech(request.dict(), headers)
+            return self._stream_speech(request.model_dump(), headers)
         else:
             response = self.client._request(
                 "POST",
                 "/audio/speech",
-                data=request.dict(),
+                data=request.model_dump(),
                 headers=headers,
                 stream=True,
             )
@@ -163,12 +164,12 @@ class Audio(BaseResource):
         headers = {"Accept": self._get_audio_content_type(response_format)}
 
         if streaming:
-            return self._stream_speech_async(request.dict(), headers)
+            return self._stream_speech_async(request.model_dump(), headers)
         else:
             response = await self.client._request_async(
                 "POST",
                 "/audio/speech",
-                data=request.dict(),
+                data=request.model_dump(),
                 headers=headers,
                 stream=True,
             )

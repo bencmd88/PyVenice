@@ -19,33 +19,29 @@ class TestBilling:
         assert billing.client == client
 
     @respx.mock
-    def test_get_usage_basic(self, respx_mock, client):
+    def test_get_usage_basic(self, respx_mock, mock_billing_response, client):
         """Test basic usage retrieval."""
-        mock_response = {
-            "data": [
-                {
-                    "date": "2024-01-01",
-                    "total_cost": 1.50,
-                    "total_tokens": 1000,
-                    "vcu_used": 150,
-                }
-            ],
-            "has_more": False,
-            "object": "list",
-        }
-
         respx_mock.get("https://api.venice.ai/api/v1/billing/usage").mock(
-            return_value=httpx.Response(200, json=mock_response)
+            return_value=httpx.Response(
+                200, 
+                json=mock_billing_response,
+                headers={
+                    "x-pagination-page": "1",
+                    "x-pagination-limit": "200", 
+                    "x-pagination-total": "1",
+                    "x-pagination-total-pages": "1"
+                }
+            )
         )
 
         billing = Billing(client)
         response = billing.get_usage()
 
-        assert response["object"] == "list"
-        assert len(response["data"]) == 1
-        assert response["data"][0]["date"] == "2024-01-01"
-        assert response["data"][0]["total_cost"] == 1.50
-        assert response["has_more"] is False
+        assert len(response.data) == 1
+        assert response.data[0].amount == 0.001
+        assert response.data[0].currency == "USD"
+        assert response.data[0].service == "chat"
+        assert response.pagination["total"] == 1
 
     @respx.mock
     def test_get_usage_with_date_range(self, respx_mock, client):
@@ -53,20 +49,21 @@ class TestBilling:
         mock_response = {
             "data": [
                 {
-                    "date": "2024-01-01",
-                    "total_cost": 1.50,
-                    "total_tokens": 1000,
-                    "vcu_used": 150,
+                    "amount": 1.50,
+                    "currency": "USD",
+                    "inferenceId": "test-inference-123",
+                    "createdAt": "2024-01-01T12:00:00Z",
+                    "service": "chat",
                 },
                 {
-                    "date": "2024-01-02",
-                    "total_cost": 2.00,
-                    "total_tokens": 1500,
-                    "vcu_used": 200,
+                    "amount": 2.00,
+                    "currency": "USD",
+                    "inferenceId": "test-inference-124",
+                    "createdAt": "2024-01-02T12:00:00Z",
+                    "service": "image",
                 },
             ],
-            "has_more": False,
-            "object": "list",
+            "pagination": {"page": 1, "limit": 200, "total": 2, "total_pages": 1},
         }
 
         respx_mock.get("https://api.venice.ai/api/v1/billing/usage").mock(
@@ -81,9 +78,9 @@ class TestBilling:
         assert "start_date=2024-01-01" in str(request.url)
         assert "end_date=2024-01-02" in str(request.url)
 
-        assert len(response["data"]) == 2
-        assert response["data"][0]["date"] == "2024-01-01"
-        assert response["data"][1]["date"] == "2024-01-02"
+        assert len(response.data) == 2
+        assert response.data[0].createdAt == "2024-01-01T12:00:00Z"
+        assert response.data[1].createdAt == "2024-01-02T12:00:00Z"
 
     @respx.mock
     def test_get_usage_with_pagination(self, respx_mock, client):
@@ -91,14 +88,14 @@ class TestBilling:
         mock_response = {
             "data": [
                 {
-                    "date": "2024-01-01",
-                    "total_cost": 1.50,
-                    "total_tokens": 1000,
-                    "vcu_used": 150,
+                    "amount": 1.50,
+                    "currency": "USD",
+                    "inferenceId": "test-inference-123",
+                    "createdAt": "2024-01-01T12:00:00Z",
+                    "service": "chat",
                 }
             ],
-            "has_more": True,
-            "object": "list",
+            "pagination": {"page": 1, "limit": 10, "total": 100, "total_pages": 10},
         }
 
         respx_mock.get("https://api.venice.ai/api/v1/billing/usage").mock(
@@ -113,7 +110,7 @@ class TestBilling:
         assert "limit=10" in str(request.url)
         assert "after=some_cursor" in str(request.url)
 
-        assert response["has_more"] is True
+        assert response.pagination["total_pages"] == 10
 
     @pytest.mark.asyncio
     @respx.mock
@@ -122,14 +119,14 @@ class TestBilling:
         mock_response = {
             "data": [
                 {
-                    "date": "2024-01-01",
-                    "total_cost": 1.50,
-                    "total_tokens": 1000,
-                    "vcu_used": 150,
+                    "amount": 1.50,
+                    "currency": "USD",
+                    "inferenceId": "test-inference-123",
+                    "createdAt": "2024-01-01T12:00:00Z",
+                    "service": "chat",
                 }
             ],
-            "has_more": False,
-            "object": "list",
+            "pagination": {"page": 1, "limit": 200, "total": 1, "total_pages": 1},
         }
 
         respx_mock.get("https://api.venice.ai/api/v1/billing/usage").mock(
@@ -139,8 +136,8 @@ class TestBilling:
         billing = Billing(client)
         response = await billing.get_usage_async()
 
-        assert response["object"] == "list"
-        assert len(response["data"]) == 1
+        assert len(response.data) == 1
+        assert response.data[0].amount == 1.50
 
 
 @pytest.mark.unit
@@ -188,13 +185,13 @@ class TestBillingIntegration:
 
         response = billing.get_usage(limit=5)
 
-        assert "object" in response
-        assert "data" in response
-        assert "has_more" in response
-        assert isinstance(response["data"], list)
+        assert hasattr(response, "data")
+        assert hasattr(response, "pagination")
+        assert isinstance(response.data, list)
 
         # If there's data, check its structure
-        if response["data"]:
-            usage_item = response["data"][0]
-            assert "date" in usage_item
-            assert "total_cost" in usage_item or "vcu_used" in usage_item
+        if response.data:
+            usage_item = response.data[0]
+            assert hasattr(usage_item, "amount")
+            assert hasattr(usage_item, "currency")
+            assert hasattr(usage_item, "service")
