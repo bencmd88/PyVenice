@@ -6,8 +6,8 @@ import respx
 from datetime import datetime, timedelta
 from freezegun import freeze_time
 
-from menace.models import Models, Model, ModelListResponse
-from menace.client import VeniceClient
+from pyvenice.models import Models, Model, ModelListResponse
+from pyvenice.client import VeniceClient
 
 
 @pytest.mark.unit
@@ -327,7 +327,7 @@ class TestModelDataClasses:
     
     def test_model_capabilities_validation(self):
         """Test ModelCapabilities validation."""
-        from menace.models import ModelCapabilities
+        from pyvenice.models import ModelCapabilities
         
         capabilities = ModelCapabilities(
             optimizedForCode=True,
@@ -346,7 +346,7 @@ class TestModelDataClasses:
     
     def test_model_capabilities_invalid_quantization(self):
         """Test ModelCapabilities with invalid quantization."""
-        from menace.models import ModelCapabilities
+        from pyvenice.models import ModelCapabilities
         from pydantic import ValidationError
         
         with pytest.raises(ValidationError):

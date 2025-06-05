@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
-Simple example showing how to use the menace library.
+Simple example showing how to use the pyvenice library.
 """
 
 import os
-from menace import VeniceClient, ChatCompletion, Models
+from pyvenice import VeniceClient, ChatCompletion, Models
 
 def main():
     # Check for API key

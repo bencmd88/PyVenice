@@ -1,15 +1,15 @@
 """
-Example usage of the menace Venice.ai API client library.
+Example usage of the pyvenice Venice.ai API client library.
 """
 
 import os
 import sys
 from pathlib import Path
 
-# Add the parent directory to Python path to find the menace package
+# Add the parent directory to Python path to find the pyvenice package
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from menace import VeniceClient, ChatCompletion, ImageGeneration, Models
+from pyvenice import VeniceClient, ChatCompletion, ImageGeneration, Models
 
 # Initialize client - requires VENICE_API_KEY environment variable
 client = VeniceClient()
@@ -94,7 +94,7 @@ def multiple_images():
     
     for style in styles:
         response = image_gen.generate(
-            prompt="A petite 22-year-old blonde woman with fair skin and blue eyes wearing a suit of nanotech body armour in a desert setting",
+            prompt="A battle-scarred veteran soldier wearing a suit of nanotech body armour in a desert setting",
             model="flux-dev",
             style_preset=style,
             width=1024,

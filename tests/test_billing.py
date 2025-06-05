@@ -5,9 +5,9 @@ import httpx
 import respx
 from datetime import datetime
 
-from menace.billing import Billing
-from menace.client import VeniceClient
-from menace.exceptions import InvalidRequestError
+from pyvenice.billing import Billing
+from pyvenice.client import VeniceClient
+from pyvenice.exceptions import InvalidRequestError
 
 
 @pytest.mark.unit

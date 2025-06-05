@@ -8,7 +8,7 @@ import pytest
 import respx
 import httpx
 
-from menace import VeniceClient
+from pyvenice import VeniceClient
 
 
 @pytest.fixture

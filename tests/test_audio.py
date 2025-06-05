@@ -5,9 +5,9 @@ import httpx
 import respx
 from io import BytesIO
 
-from menace.audio import Audio, SpeechRequest
-from menace.client import VeniceClient
-from menace.exceptions import InvalidRequestError
+from pyvenice.audio import Audio, SpeechRequest
+from pyvenice.client import VeniceClient
+from pyvenice.exceptions import InvalidRequestError
 
 
 def setup_audio_mocks(respx_mock):

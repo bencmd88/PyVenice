@@ -1,0 +1,19 @@
+# Exclude files from source distribution
+.github/ export-ignore
+tests/ export-ignore
+docs/*.mmd export-ignore
+docs/*.puml export-ignore
+docs/*.drawio export-ignore
+docs/venicebrandguidelines.pdf export-ignore
+scripts/ export-ignore
+.gitattributes export-ignore
+.gitignore export-ignore
+pytest.ini export-ignore
+CLAUDE.md export-ignore
+*.pyc export-ignore
+__pycache__/ export-ignore
+.coverage export-ignore
+htmlcov/ export-ignore
+.pytest_cache/ export-ignore
+*.egg-info/ export-ignore
+uv.lock export-ignore

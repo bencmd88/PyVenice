@@ -55,3 +55,30 @@ Thumbs.db
 
 *.webp
 *.png
+
+# PyPI build artifacts
+build/
+dist/
+*.egg-info/
+*.egg
+MANIFEST
+.pypirc
+
+# Local development
+.vscode/
+.idea/
+*.swp
+*.swo
+.mypy_cache/
+.ruff_cache/
+
+# Test outputs
+test_output/
+*.png
+*.jpg
+*.webp
+generated_image.*
+
+# Local scripts
+local_*.py
+local_*.sh

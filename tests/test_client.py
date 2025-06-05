@@ -6,8 +6,8 @@ import httpx
 import respx
 from unittest.mock import patch
 
-from menace.client import VeniceClient, BaseResource
-from menace.exceptions import (
+from pyvenice.client import VeniceClient, BaseResource
+from pyvenice.exceptions import (
     VeniceAPIError,
     AuthenticationError,
     InvalidRequestError,

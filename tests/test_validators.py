@@ -4,9 +4,9 @@ import pytest
 import warnings
 from unittest.mock import Mock, patch
 
-from menace.validators import validate_model_capabilities, filter_unsupported_params
-from menace.exceptions import InvalidRequestError
-from menace.models import ModelCapabilities
+from pyvenice.validators import validate_model_capabilities, filter_unsupported_params
+from pyvenice.exceptions import InvalidRequestError
+from pyvenice.models import ModelCapabilities
 
 
 @pytest.mark.unit

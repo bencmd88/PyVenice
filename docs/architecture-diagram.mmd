@@ -1,0 +1,52 @@
+graph TB
+    %% Define styles with Venice.ai colors (update these with actual brand colors)
+    classDef userLayer fill:#e8f4f8,stroke:#1a73e8,stroke-width:2px
+    classDef pyveniceLayer fill:#f0f7ff,stroke:#5f6368,stroke-width:2px
+    classDef apiLayer fill:#fef7e0,stroke:#f9ab00,stroke-width:2px
+    classDef highlight fill:#d2e3fc,stroke:#1967d2,stroke-width:3px
+    
+    %% User Application Layer
+    subgraph UserApp["🏢 User Applications"]
+        A1[Python Scripts]
+        A2[Web Services]
+        A3[Data Pipelines]
+    end
+    
+    %% PyVenice Library Layer
+    subgraph PyVenice["🔧 PyVenice Library"]
+        subgraph Core["Core Components"]
+            B1[VeniceClient<br/>Authentication & HTTP]
+            B2[Type Safety<br/>Pydantic Models]
+            B3[["⭐ Auto Validator<br/>@validate_model_params"]]
+        end
+        
+        subgraph Endpoints["API Endpoints"]
+            C1[ChatCompletion<br/>+ Streaming]
+            C2[ImageGeneration<br/>+ Styles]
+            C3[Audio/TTS<br/>+ Streaming]
+            C4[Embeddings]
+            C5[Models & Billing]
+        end
+    end
+    
+    %% Venice.ai API Layer
+    subgraph VeniceAPI["☁️ Venice.ai API"]
+        D1[REST Endpoints]
+        D2[LLM Models]
+        D3[Image Models]
+        D4[Audio Models]
+    end
+    
+    %% Connections
+    A1 & A2 & A3 --> B1
+    B1 --> B3
+    B3 --> B2
+    B2 --> C1 & C2 & C3 & C4 & C5
+    C1 & C2 & C3 & C4 & C5 --> D1
+    D1 --> D2 & D3 & D4
+    
+    %% Apply styles
+    class UserApp userLayer
+    class PyVenice pyveniceLayer
+    class VeniceAPI apiLayer
+    class B3 highlight

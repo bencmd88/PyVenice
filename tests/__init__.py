@@ -1,1 +1,1 @@
-"""Test package for menace library."""
+"""Test package for pyvenice library."""

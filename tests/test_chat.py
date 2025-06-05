@@ -6,15 +6,15 @@ import httpx
 import respx
 from unittest.mock import Mock, patch
 
-from menace.chat import (
+from pyvenice.chat import (
     ChatCompletion, 
     ChatCompletionRequest, 
     ChatCompletionResponse,
     ChatCompletionChunk,
     VeniceParameters
 )
-from menace.client import VeniceClient
-from menace.exceptions import InvalidRequestError
+from pyvenice.client import VeniceClient
+from pyvenice.exceptions import InvalidRequestError
 
 
 def setup_chat_mocks(respx_mock, mock_models_response, mock_compatibility_mapping, mock_chat_response=None, mock_streaming_response=None):

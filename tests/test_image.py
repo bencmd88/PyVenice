@@ -7,8 +7,8 @@ import base64
 from pathlib import Path
 from unittest.mock import Mock, patch, mock_open
 
-from menace.image import ImageGeneration, GenerateImageRequest, OpenAIImageRequest
-from menace.client import VeniceClient
+from pyvenice.image import ImageGeneration, GenerateImageRequest, OpenAIImageRequest
+from pyvenice.client import VeniceClient
 
 
 @pytest.mark.unit

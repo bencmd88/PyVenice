@@ -1,0 +1,79 @@
+@startuml PyVenice Architecture
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam roundcorner 10
+skinparam shadowing false
+
+' Define Venice.ai brand colors (update with actual values)
+!define BRAND_PRIMARY #1a73e8
+!define BRAND_SECONDARY #5f6368
+!define BRAND_ACCENT #f9ab00
+!define HIGHLIGHT #1967d2
+
+' Style definitions
+skinparam component {
+    BackgroundColor<<user>> #e8f4f8
+    BorderColor<<user>> BRAND_PRIMARY
+    BackgroundColor<<pyvenice>> #f0f7ff
+    BorderColor<<pyvenice>> BRAND_SECONDARY
+    BackgroundColor<<api>> #fef7e0
+    BorderColor<<api>> BRAND_ACCENT
+    BackgroundColor<<highlight>> #d2e3fc
+    BorderColor<<highlight>> HIGHLIGHT
+    BorderThickness<<highlight>> 3
+}
+
+package "User Applications" <<user>> {
+    [Python Scripts] <<user>>
+    [Web Services] <<user>>
+    [Data Pipelines] <<user>>
+}
+
+package "PyVenice Library" <<pyvenice>> {
+    package "Core Components" {
+        [VeniceClient] <<pyvenice>>
+        [Type Safety\nPydantic] <<pyvenice>>
+        [**Auto Validator**\n@validate_model_params] <<highlight>>
+    }
+    
+    package "API Endpoints" {
+        [ChatCompletion] <<pyvenice>>
+        [ImageGeneration] <<pyvenice>>
+        [Audio/TTS] <<pyvenice>>
+        [Embeddings] <<pyvenice>>
+        [Models/Billing] <<pyvenice>>
+    }
+}
+
+package "Venice.ai API" <<api>> {
+    [REST Endpoints] <<api>>
+    database "LLM Models" <<api>>
+    database "Image Models" <<api>>
+    database "Audio Models" <<api>>
+}
+
+' Connections
+[Python Scripts] --> [VeniceClient]
+[Web Services] --> [VeniceClient]
+[Data Pipelines] --> [VeniceClient]
+
+[VeniceClient] --> [**Auto Validator**\n@validate_model_params]
+[**Auto Validator**\n@validate_model_params] --> [Type Safety\nPydantic]
+
+[Type Safety\nPydantic] --> [ChatCompletion]
+[Type Safety\nPydantic] --> [ImageGeneration]
+[Type Safety\nPydantic] --> [Audio/TTS]
+[Type Safety\nPydantic] --> [Embeddings]
+[Type Safety\nPydantic] --> [Models/Billing]
+
+[ChatCompletion] --> [REST Endpoints]
+[ImageGeneration] --> [REST Endpoints]
+[Audio/TTS] --> [REST Endpoints]
+[Embeddings] --> [REST Endpoints]
+[Models/Billing] --> [REST Endpoints]
+
+[REST Endpoints] --> [LLM Models]
+[REST Endpoints] --> [Image Models]
+[REST Endpoints] --> [Audio Models]
+
+@enduml

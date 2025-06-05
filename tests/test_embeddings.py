@@ -5,9 +5,9 @@ import httpx
 import respx
 # import numpy as np  # Removed to avoid dependency
 
-from menace.embeddings import Embeddings, EmbeddingRequest, EmbeddingResponse
-from menace.client import VeniceClient
-from menace.exceptions import InvalidRequestError
+from pyvenice.embeddings import Embeddings, EmbeddingRequest, EmbeddingResponse
+from pyvenice.client import VeniceClient
+from pyvenice.exceptions import InvalidRequestError
 
 
 def setup_embeddings_mocks(respx_mock):

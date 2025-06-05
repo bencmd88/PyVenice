@@ -1,0 +1,86 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="PyVenice Architecture" id="architecture">
+    <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" background="#ffffff">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- User Applications Layer -->
+        <mxCell id="user-layer" value="🏢 User Applications" style="swimlane;fillColor=#e8f4f8;strokeColor=#1a73e8;strokeWidth=2;fontSize=16;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="40" y="40" width="1080" height="140" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="user-1" value="Python Scripts" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#1a73e8" vertex="1" parent="user-layer">
+          <mxGeometry x="80" y="40" width="200" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="user-2" value="Web Services" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#1a73e8" vertex="1" parent="user-layer">
+          <mxGeometry x="440" y="40" width="200" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="user-3" value="Data Pipelines" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#1a73e8" vertex="1" parent="user-layer">
+          <mxGeometry x="800" y="40" width="200" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- PyVenice Library Layer -->
+        <mxCell id="pyvenice-layer" value="🔧 PyVenice Library" style="swimlane;fillColor=#f0f7ff;strokeColor=#5f6368;strokeWidth=2;fontSize=16;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="40" y="220" width="1080" height="280" as="geometry" />
+        </mxCell>
+        
+        <!-- Core Components -->
+        <mxCell id="core-group" value="Core Components" style="group;fontSize=14;fontStyle=1" vertex="1" parent="pyvenice-layer">
+          <mxGeometry x="40" y="40" width="400" height="200" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="core-1" value="VeniceClient&lt;br&gt;Authentication &amp; HTTP" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#5f6368" vertex="1" parent="core-group">
+          <mxGeometry x="0" y="40" width="180" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="core-2" value="⭐ Auto Validator&lt;br&gt;@validate_model_params" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d2e3fc;strokeColor=#1967d2;strokeWidth=3;fontStyle=1" vertex="1" parent="core-group">
+          <mxGeometry x="200" y="40" width="180" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="core-3" value="Type Safety&lt;br&gt;Pydantic Models" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#5f6368" vertex="1" parent="core-group">
+          <mxGeometry x="100" y="120" width="180" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- API Endpoints -->
+        <mxCell id="endpoints-group" value="API Endpoints" style="group;fontSize=14;fontStyle=1" vertex="1" parent="pyvenice-layer">
+          <mxGeometry x="480" y="40" width="560" height="200" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="api-1" value="ChatCompletion&lt;br&gt;+ Streaming" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#5f6368" vertex="1" parent="endpoints-group">
+          <mxGeometry x="0" y="40" width="160" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="api-2" value="ImageGeneration&lt;br&gt;+ Styles" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#5f6368" vertex="1" parent="endpoints-group">
+          <mxGeometry x="200" y="40" width="160" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="api-3" value="Audio/TTS&lt;br&gt;+ Streaming" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#5f6368" vertex="1" parent="endpoints-group">
+          <mxGeometry x="400" y="40" width="160" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="api-4" value="Embeddings" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#5f6368" vertex="1" parent="endpoints-group">
+          <mxGeometry x="100" y="120" width="160" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="api-5" value="Models &amp; Billing" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#5f6368" vertex="1" parent="endpoints-group">
+          <mxGeometry x="300" y="120" width="160" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Venice.ai API Layer -->
+        <mxCell id="venice-layer" value="☁️ Venice.ai API" style="swimlane;fillColor=#fef7e0;strokeColor=#f9ab00;strokeWidth=2;fontSize=16;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="40" y="540" width="1080" height="140" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="venice-1" value="REST Endpoints" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#f9ab00" vertex="1" parent="venice-layer">
+          <mxGeometry x="440" y="40" width="200" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- Arrows would be added here -->
+        
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
