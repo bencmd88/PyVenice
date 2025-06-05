@@ -6,7 +6,7 @@ import respx
 
 from pyvenice.audio import Audio, SpeechRequest
 from pyvenice.client import VeniceClient
-from pyvenice.exceptions import InvalidRequestError
+# from pyvenice.exceptions import InvalidRequestError
 
 
 def setup_audio_mocks(respx_mock):
