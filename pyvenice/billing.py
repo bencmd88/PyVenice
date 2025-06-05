@@ -54,8 +54,8 @@ class Billing(BaseResource):
     def get_usage(
         self,
         *,
-        start_date: Optional[datetime] = None,
-        end_date: Optional[datetime] = None,
+        start_date: Optional[Union[datetime, str]] = None,
+        end_date: Optional[Union[datetime, str]] = None,
         currency: Optional[Literal["USD", "VCU"]] = None,
         page: int = 1,
         limit: int = 200,
@@ -84,9 +84,15 @@ class Billing(BaseResource):
         }
 
         if start_date:
-            params["startDate"] = start_date.isoformat()
+            if isinstance(start_date, str):
+                params["startDate"] = start_date
+            else:
+                params["startDate"] = start_date.isoformat()
         if end_date:
-            params["endDate"] = end_date.isoformat()
+            if isinstance(end_date, str):
+                params["endDate"] = end_date
+            else:
+                params["endDate"] = end_date.isoformat()
         if currency:
             params["currency"] = currency
 
@@ -127,8 +133,8 @@ class Billing(BaseResource):
     async def get_usage_async(
         self,
         *,
-        start_date: Optional[datetime] = None,
-        end_date: Optional[datetime] = None,
+        start_date: Optional[Union[datetime, str]] = None,
+        end_date: Optional[Union[datetime, str]] = None,
         currency: Optional[Literal["USD", "VCU"]] = None,
         page: int = 1,
         limit: int = 200,
@@ -143,9 +149,15 @@ class Billing(BaseResource):
         }
 
         if start_date:
-            params["startDate"] = start_date.isoformat()
+            if isinstance(start_date, str):
+                params["startDate"] = start_date
+            else:
+                params["startDate"] = start_date.isoformat()
         if end_date:
-            params["endDate"] = end_date.isoformat()
+            if isinstance(end_date, str):
+                params["endDate"] = end_date
+            else:
+                params["endDate"] = end_date.isoformat()
         if currency:
             params["currency"] = currency
 
@@ -186,8 +198,8 @@ class Billing(BaseResource):
     def get_all_usage(
         self,
         *,
-        start_date: Optional[datetime] = None,
-        end_date: Optional[datetime] = None,
+        start_date: Optional[Union[datetime, str]] = None,
+        end_date: Optional[Union[datetime, str]] = None,
         currency: Optional[Literal["USD", "VCU"]] = None,
         sort_order: Literal["asc", "desc"] = "desc",
     ) -> List[UsageEntry]:
@@ -229,8 +241,8 @@ class Billing(BaseResource):
     def get_usage_summary(
         self,
         *,
-        start_date: Optional[datetime] = None,
-        end_date: Optional[datetime] = None,
+        start_date: Optional[Union[datetime, str]] = None,
+        end_date: Optional[Union[datetime, str]] = None,
     ) -> Dict[str, Any]:
         """
         Get a summary of usage by model and currency.

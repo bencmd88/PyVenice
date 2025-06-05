@@ -116,6 +116,25 @@ class Audio(BaseResource):
             )
             return response.content
 
+    def create_speech_streaming(
+        self,
+        input: str,
+        voice: str = "af_nova",
+        *,
+        model: Literal["tts-kokoro"] = "tts-kokoro",
+        response_format: Literal["mp3", "opus", "aac", "flac", "wav", "pcm"] = "mp3",
+        speed: float = 1.0,
+    ) -> Generator[bytes, None, None]:
+        """Convenience method for streaming speech creation."""
+        return self.create_speech(
+            input=input,
+            voice=voice,
+            model=model,
+            response_format=response_format,
+            speed=speed,
+            streaming=True,
+        )
+
     def _get_audio_content_type(self, format: str) -> str:
         """Get the appropriate content type for audio format."""
         content_types = {
@@ -136,10 +155,9 @@ class Audio(BaseResource):
             "POST", "/audio/speech", data=payload, headers=headers, stream=True
         )
 
-        with response as r:
-            for chunk in r.iter_bytes(chunk_size=4096):
-                if chunk:
-                    yield chunk
+        for chunk in response.iter_bytes(chunk_size=4096):
+            if chunk:
+                yield chunk
 
     async def create_speech_async(
         self,
@@ -175,6 +193,25 @@ class Audio(BaseResource):
             )
             return response.content
 
+    async def create_speech_streaming_async(
+        self,
+        input: str,
+        voice: str = "af_nova",
+        *,
+        model: Literal["tts-kokoro"] = "tts-kokoro",
+        response_format: Literal["mp3", "opus", "aac", "flac", "wav", "pcm"] = "mp3",
+        speed: float = 1.0,
+    ) -> AsyncGenerator[bytes, None]:
+        """Convenience method for async streaming speech creation."""
+        return await self.create_speech_async(
+            input=input,
+            voice=voice,
+            model=model,
+            response_format=response_format,
+            speed=speed,
+            streaming=True,
+        )
+
     async def _stream_speech_async(
         self, payload: dict, headers: dict
     ) -> AsyncGenerator[bytes, None]:
@@ -183,10 +220,9 @@ class Audio(BaseResource):
             "POST", "/audio/speech", data=payload, headers=headers, stream=True
         )
 
-        async with response as r:
-            async for chunk in r.aiter_bytes(chunk_size=4096):
-                if chunk:
-                    yield chunk
+        async for chunk in response.aiter_bytes(chunk_size=4096):
+            if chunk:
+                yield chunk
 
     def save_speech(
         self,

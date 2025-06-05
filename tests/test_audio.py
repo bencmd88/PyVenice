@@ -338,10 +338,11 @@ class TestErrorHandling:
         )
 
         audio = Audio(client)
-        with pytest.raises(InvalidRequestError) as exc_info:
+        from pydantic import ValidationError
+        with pytest.raises(ValidationError) as exc_info:
             audio.create_speech(input="Test text", voice="invalid_voice")
 
-        assert "Invalid voice specified" in str(exc_info.value)
+        assert "Invalid voice" in str(exc_info.value)
 
     @respx.mock
     def test_text_too_long_error(self, respx_mock, client):
@@ -360,12 +361,11 @@ class TestErrorHandling:
         long_text = "a" * 5000  # Longer than 4096 limit
 
         # The validation should happen at the request level
-        try:
+        from pydantic import ValidationError
+        with pytest.raises(ValidationError) as exc_info:
             audio.create_speech(input=long_text, voice="af_alloy")
-            assert False, "Should have raised an exception"
-        except Exception as e:
-            # Either ValidationError from pydantic or API error
-            assert "too long" in str(e).lower() or "exceeds" in str(e).lower()
+        
+        assert "4096 characters" in str(exc_info.value)
 
 
 @pytest.mark.unit

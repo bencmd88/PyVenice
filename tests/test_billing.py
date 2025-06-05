@@ -44,71 +44,59 @@ class TestBilling:
         assert response.pagination["total"] == 1
 
     @respx.mock
-    def test_get_usage_with_date_range(self, respx_mock, client):
+    def test_get_usage_with_date_range(self, respx_mock, mock_billing_response, client):
         """Test usage retrieval with date range."""
-        mock_response = {
-            "data": [
-                {
-                    "amount": 1.50,
-                    "currency": "USD",
-                    "inferenceId": "test-inference-123",
-                    "createdAt": "2024-01-01T12:00:00Z",
-                    "service": "chat",
-                },
-                {
-                    "amount": 2.00,
-                    "currency": "USD",
-                    "inferenceId": "test-inference-124",
-                    "createdAt": "2024-01-02T12:00:00Z",
-                    "service": "image",
-                },
-            ],
-            "pagination": {"page": 1, "limit": 200, "total": 2, "total_pages": 1},
-        }
-
         respx_mock.get("https://api.venice.ai/api/v1/billing/usage").mock(
-            return_value=httpx.Response(200, json=mock_response)
+            return_value=httpx.Response(
+                200,
+                json=mock_billing_response,
+                headers={
+                    "x-pagination-page": "1",
+                    "x-pagination-limit": "200",
+                    "x-pagination-total": "1",
+                    "x-pagination-total-pages": "1",
+                },
+            )
         )
 
+        from datetime import datetime
         billing = Billing(client)
-        response = billing.get_usage(start_date="2024-01-01", end_date="2024-01-02")
+        response = billing.get_usage(
+            start_date=datetime(2024, 1, 1), 
+            end_date=datetime(2024, 1, 2)
+        )
 
         # Verify request was made with correct parameters
         request = respx_mock.calls[0].request
-        assert "start_date=2024-01-01" in str(request.url)
-        assert "end_date=2024-01-02" in str(request.url)
+        assert "startDate=2024-01-01T00%3A00%3A00" in str(request.url)
+        assert "endDate=2024-01-02T00%3A00%3A00" in str(request.url)
 
-        assert len(response.data) == 2
-        assert response.data[0].createdAt == "2024-01-01T12:00:00Z"
-        assert response.data[1].createdAt == "2024-01-02T12:00:00Z"
+        assert len(response.data) == 1
+        assert response.data[0].createdAt == "2024-12-20T21:28:08.934Z"
 
     @respx.mock
-    def test_get_usage_with_pagination(self, respx_mock, client):
+    def test_get_usage_with_pagination(self, respx_mock, mock_billing_response, client):
         """Test usage retrieval with pagination."""
-        mock_response = {
-            "data": [
-                {
-                    "amount": 1.50,
-                    "currency": "USD",
-                    "inferenceId": "test-inference-123",
-                    "createdAt": "2024-01-01T12:00:00Z",
-                    "service": "chat",
-                }
-            ],
-            "pagination": {"page": 1, "limit": 10, "total": 100, "total_pages": 10},
-        }
-
         respx_mock.get("https://api.venice.ai/api/v1/billing/usage").mock(
-            return_value=httpx.Response(200, json=mock_response)
+            return_value=httpx.Response(
+                200,
+                json=mock_billing_response,
+                headers={
+                    "x-pagination-page": "1",
+                    "x-pagination-limit": "10",
+                    "x-pagination-total": "100",
+                    "x-pagination-total-pages": "10",
+                },
+            )
         )
 
         billing = Billing(client)
-        response = billing.get_usage(limit=10, after="some_cursor")
+        response = billing.get_usage(limit=10, page=2)
 
         # Verify request was made with correct parameters
         request = respx_mock.calls[0].request
         assert "limit=10" in str(request.url)
-        assert "after=some_cursor" in str(request.url)
+        assert "page=2" in str(request.url)
 
         assert response.pagination["total_pages"] == 10
 
