@@ -6,6 +6,7 @@ import respx
 
 from pyvenice.audio import Audio, SpeechRequest
 from pyvenice.client import VeniceClient
+
 # from pyvenice.exceptions import InvalidRequestError
 
 
@@ -339,6 +340,7 @@ class TestErrorHandling:
 
         audio = Audio(client)
         from pydantic import ValidationError
+
         with pytest.raises(ValidationError) as exc_info:
             audio.create_speech(input="Test text", voice="invalid_voice")
 
@@ -362,9 +364,10 @@ class TestErrorHandling:
 
         # The validation should happen at the request level
         from pydantic import ValidationError
+
         with pytest.raises(ValidationError) as exc_info:
             audio.create_speech(input=long_text, voice="af_alloy")
-        
+
         assert "4096 characters" in str(exc_info.value)
 
 

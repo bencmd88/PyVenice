@@ -60,10 +60,10 @@ class TestBilling:
         )
 
         from datetime import datetime
+
         billing = Billing(client)
         response = billing.get_usage(
-            start_date=datetime(2024, 1, 1), 
-            end_date=datetime(2024, 1, 2)
+            start_date=datetime(2024, 1, 1), end_date=datetime(2024, 1, 2)
         )
 
         # Verify request was made with correct parameters
