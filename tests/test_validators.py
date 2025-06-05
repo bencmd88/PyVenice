@@ -2,7 +2,7 @@
 
 import pytest
 import warnings
-from unittest.mock import Mock, patch
+from unittest.mock import Mock
 
 from pyvenice.validators import validate_model_capabilities, filter_unsupported_params
 from pyvenice.exceptions import InvalidRequestError

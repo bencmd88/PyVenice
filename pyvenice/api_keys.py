@@ -6,7 +6,7 @@ from typing import Optional, List, Dict, Any
 from datetime import datetime
 from pydantic import BaseModel, Field
 
-from .client import BaseResource, VeniceClient
+from .client import BaseResource
 
 
 class APIKeyInfo(BaseModel):

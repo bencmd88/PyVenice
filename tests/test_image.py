@@ -5,7 +5,7 @@ import httpx
 import respx
 import base64
 from pathlib import Path
-from unittest.mock import Mock, patch, mock_open
+from unittest.mock import patch, mock_open
 
 from pyvenice.image import ImageGeneration, GenerateImageRequest, OpenAIImageRequest
 from pyvenice.client import VeniceClient
@@ -55,7 +55,7 @@ class TestImageGeneration:
         )
         
         image_gen = ImageGeneration(client)
-        response = image_gen.generate(
+        image_gen.generate(
             prompt="A cyberpunk city",
             model="venice-sd35",
             width=512,

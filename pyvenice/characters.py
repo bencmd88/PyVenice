@@ -2,8 +2,7 @@
 Characters endpoint wrapper for Venice.ai API.
 """
 
-from typing import List, Dict, Any, Optional, Literal
-from datetime import datetime
+from typing import List, Optional, Literal
 from pydantic import BaseModel, Field
 
 from .client import BaseResource, VeniceClient

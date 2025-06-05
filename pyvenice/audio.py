@@ -5,7 +5,6 @@ Audio/Speech endpoints wrapper for Venice.ai API.
 from typing import Optional, Literal, Union, Generator, AsyncGenerator
 from pathlib import Path
 from pydantic import BaseModel, Field, validator
-import httpx
 
 from .client import BaseResource, VeniceClient
 from .models import Models

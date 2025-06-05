@@ -8,12 +8,10 @@ from typing import (
     Literal, TypedDict, overload
 )
 from pydantic import BaseModel, Field, validator
-import httpx
 
 from .client import BaseResource, VeniceClient
 from .models import Models
-from .validators import validate_model_capabilities, filter_unsupported_params
-from .exceptions import InvalidRequestError
+from .validators import validate_model_capabilities
 
 
 class TextContent(TypedDict):

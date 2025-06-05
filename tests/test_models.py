@@ -3,10 +3,9 @@
 import pytest
 import httpx
 import respx
-from datetime import datetime, timedelta
 from freezegun import freeze_time
 
-from pyvenice.models import Models, Model, ModelListResponse
+from pyvenice.models import Models, ModelListResponse
 from pyvenice.client import VeniceClient
 
 
