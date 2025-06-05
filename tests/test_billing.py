@@ -23,14 +23,14 @@ class TestBilling:
         """Test basic usage retrieval."""
         respx_mock.get("https://api.venice.ai/api/v1/billing/usage").mock(
             return_value=httpx.Response(
-                200, 
+                200,
                 json=mock_billing_response,
                 headers={
                     "x-pagination-page": "1",
-                    "x-pagination-limit": "200", 
+                    "x-pagination-limit": "200",
                     "x-pagination-total": "1",
-                    "x-pagination-total-pages": "1"
-                }
+                    "x-pagination-total-pages": "1",
+                },
             )
         )
 

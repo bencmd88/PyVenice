@@ -116,7 +116,9 @@ class Billing(BaseResource):
                 if "x-pagination-total" in response_headers:
                     pagination["total"] = int(response_headers["x-pagination-total"])
                 if "x-pagination-total-pages" in response_headers:
-                    pagination["total_pages"] = int(response_headers["x-pagination-total-pages"])
+                    pagination["total_pages"] = int(
+                        response_headers["x-pagination-total-pages"]
+                    )
 
             result = response.json()
             result["pagination"] = pagination
@@ -173,7 +175,9 @@ class Billing(BaseResource):
                 if "x-pagination-total" in response_headers:
                     pagination["total"] = int(response_headers["x-pagination-total"])
                 if "x-pagination-total-pages" in response_headers:
-                    pagination["total_pages"] = int(response_headers["x-pagination-total-pages"])
+                    pagination["total_pages"] = int(
+                        response_headers["x-pagination-total-pages"]
+                    )
 
             result = response.json()
             result["pagination"] = pagination

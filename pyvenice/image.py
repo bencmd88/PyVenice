@@ -85,7 +85,7 @@ class UpscaleImageRequest(BaseModel):
     replication: float = Field(0.35, ge=0.1, le=1)
     scale: float = Field(2, ge=1, le=4)
 
-    @model_validator(mode='after')
+    @model_validator(mode="after")
     def validate_enhance_with_scale(self):
         """Validate that enhance must be true when scale is 1."""
         if self.scale == 1 and not self.enhance:
@@ -181,7 +181,9 @@ class ImageGeneration(BaseResource):
             **kwargs,
         )
 
-        response = self.client.post("/image/generate", request.model_dump(exclude_none=True))
+        response = self.client.post(
+            "/image/generate", request.model_dump(exclude_none=True)
+        )
 
         # Check response headers for content violations
         if hasattr(response, "headers"):

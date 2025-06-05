@@ -90,7 +90,9 @@ class Embeddings(BaseResource):
             encoding_format=encoding_format,
         )
 
-        response = self.client.post("/embeddings", request.model_dump(exclude_none=True))
+        response = self.client.post(
+            "/embeddings", request.model_dump(exclude_none=True)
+        )
         return EmbeddingResponse(**response)
 
     async def create_async(

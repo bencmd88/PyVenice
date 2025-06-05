@@ -240,7 +240,14 @@ class TestSpeechRequest:
 
     def test_voice_validation_valid(self):
         """Test valid voice values."""
-        valid_voices = ["af_alloy", "am_echo", "am_fable", "am_onyx", "af_nova", "af_sky"]
+        valid_voices = [
+            "af_alloy",
+            "am_echo",
+            "am_fable",
+            "am_onyx",
+            "af_nova",
+            "af_sky",
+        ]
 
         for voice in valid_voices:
             request = SpeechRequest(input="Test", voice=voice)
@@ -258,7 +265,9 @@ class TestSpeechRequest:
         valid_formats = ["mp3", "opus", "aac", "flac", "wav", "pcm"]
 
         for format in valid_formats:
-            request = SpeechRequest(input="Test", voice="af_alloy", response_format=format)
+            request = SpeechRequest(
+                input="Test", voice="af_alloy", response_format=format
+            )
             assert request.response_format == format
 
     def test_response_format_validation_invalid(self):
@@ -266,7 +275,9 @@ class TestSpeechRequest:
         from pydantic import ValidationError
 
         with pytest.raises(ValidationError):
-            SpeechRequest(input="Test", voice="af_alloy", response_format="invalid_format")
+            SpeechRequest(
+                input="Test", voice="af_alloy", response_format="invalid_format"
+            )
 
     def test_speed_validation_bounds(self):
         """Test speed validation bounds."""
