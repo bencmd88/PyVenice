@@ -274,7 +274,6 @@ class TestEmbeddingRequest:
     
     def test_request_validation_empty_input(self):
         """Test validation with empty input."""
-        from pydantic import ValidationError
         
         # Empty string should be invalid
         with pytest.raises(ValueError, match="Input string cannot be empty"):

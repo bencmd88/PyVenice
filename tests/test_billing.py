@@ -3,7 +3,6 @@
 import pytest
 import httpx
 import respx
-from datetime import datetime
 
 from pyvenice.billing import Billing
 from pyvenice.client import VeniceClient

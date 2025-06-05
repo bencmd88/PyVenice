@@ -1,12 +1,8 @@
 """Test configuration and shared fixtures."""
 
 import os
-import json
-from datetime import datetime
-from typing import Dict, Any
 import pytest
 import respx
-import httpx
 
 from pyvenice import VeniceClient
 

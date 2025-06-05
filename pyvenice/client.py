@@ -3,13 +3,10 @@ Base client for Venice.ai API with authentication and common functionality.
 """
 
 import os
-from typing import Optional, Dict, Any, Union, AsyncGenerator
+from typing import Optional, Dict, Any, Union
 from urllib.parse import urljoin
 import httpx
-import json
 from datetime import datetime
-import asyncio
-from functools import wraps
 
 from .exceptions import (
     VeniceAPIError,
@@ -93,7 +90,7 @@ class VeniceClient:
             error_data = response.json()
             error_message = error_data.get("error", "Unknown error")
             details = error_data.get("details", {})
-        except:
+        except (ValueError, KeyError):
             error_message = response.text or f"HTTP {response.status_code} error"
             details = {}
         

@@ -4,7 +4,6 @@ import json
 import pytest
 import httpx
 import respx
-from unittest.mock import Mock, patch
 
 from pyvenice.chat import (
     ChatCompletion, 
@@ -373,7 +372,7 @@ class TestParameterValidation:
         chat = ChatCompletion(client)
         
         # Test with model that doesn't support function calling (venice-uncensored)
-        response = chat.create(
+        chat.create(
             model="venice-uncensored",
             messages=[{"role": "user", "content": "Hello"}],
             parallel_tool_calls=True  # Should be filtered out
@@ -413,7 +412,7 @@ class TestParameterValidation:
         
         # Test with model that supports function calling (qwen-2.5-qwq-32b)
         tools = [{"type": "function", "function": {"name": "test_function"}}]
-        response = chat.create(
+        chat.create(
             model="qwen-2.5-qwq-32b",
             messages=[{"role": "user", "content": "Hello"}],
             tools=tools,

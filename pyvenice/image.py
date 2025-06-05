@@ -6,11 +6,9 @@ import base64
 from typing import Optional, List, Dict, Any, Union, Literal, BinaryIO
 from pathlib import Path
 from pydantic import BaseModel, Field, validator
-import httpx
 
 from .client import BaseResource, VeniceClient
 from .models import Models
-from .exceptions import InvalidRequestError
 
 
 class GenerateImageRequest(BaseModel):

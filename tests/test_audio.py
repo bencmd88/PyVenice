@@ -3,7 +3,6 @@
 import pytest
 import httpx
 import respx
-from io import BytesIO
 
 from pyvenice.audio import Audio, SpeechRequest
 from pyvenice.client import VeniceClient
