@@ -383,15 +383,15 @@ class ImageGeneration(BaseResource):
         """
         output_dir = Path(output_dir)
         output_dir.mkdir(parents=True, exist_ok=True)
-        
+
         # Normalize format
         format = format.lower().lstrip(".")
         if format == "jpg":
             format = "jpeg"
-        
+
         # Generate timestamp
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        
+
         # Extract images and metadata based on response type
         if isinstance(response, ImageGenerationResponse):
             images = response.images
@@ -410,7 +410,9 @@ class ImageGeneration(BaseResource):
                 if "b64_json" in item:
                     images.append(item["b64_json"])
                 else:
-                    raise ValueError("OpenAI response contains URLs, not base64 data. Cannot save to disk.")
+                    raise ValueError(
+                        "OpenAI response contains URLs, not base64 data. Cannot save to disk."
+                    )
             response_id = str(response.created)
             metadata = {
                 "created": response.created,
@@ -419,9 +421,9 @@ class ImageGeneration(BaseResource):
             }
         else:
             raise ValueError(f"Unsupported response type: {type(response)}")
-        
+
         saved_paths = []
-        
+
         # Save each image
         for index, image_b64 in enumerate(images):
             # Format filename
@@ -430,13 +432,13 @@ class ImageGeneration(BaseResource):
                 timestamp=timestamp,
                 id=response_id,
             )
-            
+
             # Add extension if not present
             if not filename.endswith(f".{format}"):
                 filename = f"{filename}.{format}"
-            
+
             file_path = output_dir / filename
-            
+
             # Decode and save image
             try:
                 image_data = base64.b64decode(image_b64)
@@ -445,13 +447,13 @@ class ImageGeneration(BaseResource):
                 saved_paths.append(file_path)
             except Exception as e:
                 raise ValueError(f"Failed to save image {index}: {e}")
-        
+
         # Save metadata if requested
         if save_metadata and saved_paths:
             metadata_filename = f"{filename_template.format(index='metadata', timestamp=timestamp, id=response_id)}.json"
             metadata_path = output_dir / metadata_filename
-            
+
             with open(metadata_path, "w") as f:
                 json.dump(metadata, f, indent=2)
-        
+
         return saved_paths

@@ -106,6 +106,7 @@ def multiple_images():
 
         image_gen.save_images(response, output_dir="outputs", format="png")
 
+
 #        if response.images:
 #            import base64
 #
