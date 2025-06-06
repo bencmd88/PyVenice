@@ -97,20 +97,22 @@ def multiple_images():
 
     for style in styles:
         response = image_gen.generate(
-            prompt="A battle-scarred veteran soldier wearing a suit of nanotech body armour in a desert setting",
-            model="flux-dev",
+            prompt="A flying sorceress wearing translucent-azure arcane robes in a desert setting",
+            model="hidream",
             style_preset=style,
             width=1024,
             height=1024,
         )
 
-        if response.images:
-            import base64
+        image_gen.save_images(response, output_dir="outputs", format="png")
 
-            image_data = base64.b64decode(response.images[0])
-            with open(f"image_{style}.webp", "wb") as f:
-                f.write(image_data)
-            print(f"image_{style}.webp generated.")
+#        if response.images:
+#            import base64
+#
+#            image_data = base64.b64decode(response.images[0])
+#            with open(f"image_{style}.webp", "wb") as f:
+#                f.write(image_data)
+#            print(f"image_{style}.webp generated.")
 
 
 def example_streaming():

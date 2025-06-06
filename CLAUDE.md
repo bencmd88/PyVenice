@@ -2,6 +2,13 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Project Setup Checklist
+
+**ALWAYS verify when starting work on a new project:**
+- [ ] GRIMOIRE.md symlinked: `ls -la GRIMOIRE.md` (should show symlink to ~/code/central_projections/GRIMOIRE.md)
+- [ ] If missing: `ln -s ~/code/central_projections/GRIMOIRE.md ./GRIMOIRE.md`
+- [ ] Remind user if symlink is missing or broken
+
 ## Project Overview
 
 "pyvenice" - A comprehensive Python client library for the Venice.ai API, providing a wrapper for all API endpoints with type safety, automatic validation, and convenience features.
