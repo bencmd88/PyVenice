@@ -3,6 +3,8 @@ Image generation, styles, and upscaling endpoints for Venice.ai API.
 """
 
 import base64
+import json
+from datetime import datetime
 from typing import Optional, List, Dict, Any, Union, Literal, BinaryIO
 from pathlib import Path
 from pydantic import BaseModel, Field, field_validator, model_validator
@@ -344,3 +346,112 @@ class ImageGeneration(BaseResource):
         )
 
         return response.content
+
+    def save_images(
+        self,
+        response: Union[ImageGenerationResponse, OpenAIImageResponse],
+        output_dir: Union[str, Path] = ".",
+        filename_template: str = "image_{index}_{timestamp}",
+        format: str = "png",
+        save_metadata: bool = True,
+    ) -> List[Path]:
+        """
+        Save generated images to disk.
+
+        Args:
+            response: Image generation response from generate() or generate_openai_style()
+            output_dir: Directory to save images (default: current directory)
+            filename_template: Template for filenames. Supports placeholders:
+                - {index}: Image index (0, 1, 2, ...)
+                - {timestamp}: Current timestamp (YYYYMMDD_HHMMSS)
+                - {id}: Response ID (for ImageGenerationResponse only)
+            format: Image file format extension (png, jpg, jpeg, webp)
+            save_metadata: Whether to save generation metadata as JSON sidecar file
+
+        Returns:
+            List of Path objects pointing to saved image files
+
+        Example:
+            >>> response = image_gen.generate("A sunset", model="venice-sd35")
+            >>> saved_paths = image_gen.save_images(
+            ...     response,
+            ...     output_dir="./outputs",
+            ...     filename_template="sunset_{index}",
+            ...     format="png"
+            ... )
+            >>> print(f"Saved {len(saved_paths)} images")
+        """
+        output_dir = Path(output_dir)
+        output_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Normalize format
+        format = format.lower().lstrip(".")
+        if format == "jpg":
+            format = "jpeg"
+        
+        # Generate timestamp
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        
+        # Extract images and metadata based on response type
+        if isinstance(response, ImageGenerationResponse):
+            images = response.images
+            response_id = response.id
+            metadata = {
+                "id": response.id,
+                "request": response.request,
+                "timing": response.timing,
+                "saved_at": datetime.now().isoformat(),
+                "format": format,
+            }
+        elif isinstance(response, OpenAIImageResponse):
+            # Extract base64 data from OpenAI format
+            images = []
+            for item in response.data:
+                if "b64_json" in item:
+                    images.append(item["b64_json"])
+                else:
+                    raise ValueError("OpenAI response contains URLs, not base64 data. Cannot save to disk.")
+            response_id = str(response.created)
+            metadata = {
+                "created": response.created,
+                "saved_at": datetime.now().isoformat(),
+                "format": format,
+            }
+        else:
+            raise ValueError(f"Unsupported response type: {type(response)}")
+        
+        saved_paths = []
+        
+        # Save each image
+        for index, image_b64 in enumerate(images):
+            # Format filename
+            filename = filename_template.format(
+                index=index,
+                timestamp=timestamp,
+                id=response_id,
+            )
+            
+            # Add extension if not present
+            if not filename.endswith(f".{format}"):
+                filename = f"{filename}.{format}"
+            
+            file_path = output_dir / filename
+            
+            # Decode and save image
+            try:
+                image_data = base64.b64decode(image_b64)
+                with open(file_path, "wb") as f:
+                    f.write(image_data)
+                saved_paths.append(file_path)
+            except Exception as e:
+                raise ValueError(f"Failed to save image {index}: {e}")
+        
+        # Save metadata if requested
+        if save_metadata and saved_paths:
+            metadata_filename = f"{filename_template.format(index='metadata', timestamp=timestamp, id=response_id)}.json"
+            metadata_path = output_dir / metadata_filename
+            
+            with open(metadata_path, "w") as f:
+                json.dump(metadata, f, indent=2)
+        
+        return saved_paths
