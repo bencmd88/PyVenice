@@ -60,3 +60,8 @@ python src/example_usage.py   # Comprehensive API demonstration
 - **validators.py** depends on `models.py` for capability checking
 - **models.py** caches are shared across all endpoint instances via the client
 - **Streaming responses** in chat/audio require special handling of SSE format and chunk processing
+
+### User soft-disabled CodeCov
+
+- **CodeCov failing** due to lack of token no longer causes the CI/CD to fail. The user changed the setting in test.conf.
+- **Investigate token** requirements before when next debugging the CI/CD pipeline.
