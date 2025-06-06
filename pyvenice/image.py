@@ -26,11 +26,11 @@ class GenerateImageRequest(BaseModel):
     embed_exif_metadata: bool = False
     format: Literal["jpeg", "png", "webp"] = "webp"
     height: int = Field(1024, gt=0, le=1280)
-    hide_watermark: bool = False
+    hide_watermark: bool = True
     lora_strength: Optional[int] = Field(None, ge=0, le=100)
     negative_prompt: Optional[str] = Field(None, max_length=1500)
     return_binary: bool = False
-    safe_mode: bool = True
+    safe_mode: bool = False
     seed: Optional[int] = Field(None, ge=-999999999, le=999999999)
     steps: int = Field(20, gt=0, le=30)
     style_preset: Optional[str] = None
@@ -139,7 +139,7 @@ class ImageGeneration(BaseResource):
         seed: Optional[int] = None,
         style_preset: Optional[str] = None,
         format: Literal["jpeg", "png", "webp"] = "webp",
-        safe_mode: bool = True,
+        safe_mode: bool = False,
         return_binary: bool = False,
         **kwargs,
     ) -> ImageGenerationResponse:
