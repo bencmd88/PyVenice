@@ -4,7 +4,32 @@ Simple example showing how to use the pyvenice library.
 """
 
 import os
-from pyvenice import VeniceClient, ChatCompletion, Models
+from pyvenice import VeniceClient, ChatCompletion, Models, ImageGeneration
+
+
+def multiple_images():
+    """Generate multiple images using different styles."""
+    client = VeniceClient()
+    image_gen = ImageGeneration(client)
+
+    styles = image_gen.list_styles()
+
+    for style in styles:
+        response = image_gen.generate(
+            prompt="A battle-scarred veteran soldier wearing a suit of nanotech body armour in a desert setting",
+            model="flux-dev",
+            style_preset=style,
+            width=1024,
+            height=1024,
+        )
+
+        if response.images:
+            import base64
+
+            image_data = base64.b64decode(response.images[0])
+            with open(f"image_{style}.webp", "wb") as f:
+                f.write(image_data)
+            print(f"image_{style}.webp generated.")
 
 
 def main():

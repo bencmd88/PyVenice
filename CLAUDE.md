@@ -65,3 +65,46 @@ python src/example_usage.py   # Comprehensive API demonstration
 
 - **CodeCov failing** due to lack of token no longer causes the CI/CD to fail. The user changed the setting in test.conf.
 - **Investigate token** requirements before when next debugging the CI/CD pipeline.
+
+## Robust File Modification methodology
+
+**ALWAYS follow this 5-phase process when adding code to files to avoid loops and conflicts:**
+
+### Phase 1: Planning & Reconnaissance
+1. **Read target area** - Use `Read` tool ±10 lines around intended location
+2. **Use Grep** to check if targeting strings appear multiple times  
+3. **Choose insertion strategy** - End of file, before/after specific method, etc.
+4. **Identify exact target location** with line numbers
+
+### Phase 2: Tool Selection & Targeting  
+1. **Select appropriate tool**:
+   - `Edit` - Only when target string is unique
+   - `Write` - For complete file replacement (with backup)
+   - `Bash` append (`>>`) - For end-of-file additions
+2. **Plan targeting string** - Must be unique with enough context
+3. **Use `grep -n` to verify target string uniqueness**
+
+### Phase 3: Pre-execution Safety
+1. **Create backup**: `git stash push -m "backup before changes"`
+2. **Define success criteria** - Exact line numbers, syntax check, etc.
+3. **Define failure detection** - Duplicates, syntax errors, wrong location
+4. **Plan one-command rollback** - `git checkout -- file` or `git stash pop`
+
+### Phase 4: Execution & Immediate Verification
+1. **Execute the change** using planned tool/targeting
+2. **Immediate syntax check** - `python -c "import module"` 
+3. **Immediate location check** - `grep -n "new_code_marker"` to confirm placement
+4. **Check for duplicates** - `grep -c "function_name"` should be 1
+5. **If ANY failure detected** - Immediately revert and restart from Phase 1
+
+### Phase 5: Final Validation
+1. **Test function import** - `from module import function`
+2. **Run relevant tests** if available
+3. **Commit only if all checks pass**
+
+**Key principles:**
+- ✅ Never proceed without unique targeting string
+- ✅ Always verify immediately after each change  
+- ✅ Always have one-command rollback ready
+- ✅ Use `Read` extensively before `Edit`
+- ✅ Stop and restart from Phase 1 if any verification fails
