@@ -13,6 +13,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 "pyvenice" - A comprehensive Python client library for the Venice.ai API, providing a wrapper for all API endpoints with type safety, automatic validation, and convenience features.
 
+## Development Roadmap
+
+**Note**: Comprehensive roadmap was moved to central project repository.
+- Documentation and wiki development plans
+- Feature enhancement priorities  
+- Community growth strategies
+- Long-term vision for agentic frameworks
+- Realistic timeframes for all major milestones
+
 ## Key Architecture
 
 The library implements a **decorator-based validation pattern** that requires understanding across multiple files:
@@ -68,10 +77,13 @@ python src/example_usage.py   # Comprehensive API demonstration
 - **models.py** caches are shared across all endpoint instances via the client
 - **Streaming responses** in chat/audio require special handling of SSE format and chunk processing
 
-### User soft-disabled CodeCov
+### Project Status & Notes
 
-- **CodeCov failing** due to lack of token no longer causes the CI/CD to fail. The user changed the setting in test.conf.
-- **Investigate token** requirements before when next debugging the CI/CD pipeline.
+- **CodeCov soft-disabled** due to lack of token no longer causes CI/CD to fail
+- **Development roadmap** moved to central project repository (not in this repo)
+- **Banner added** to README.md (src/pyvenice_oldschool_banner.png)
+- **Feature branch merged** successfully with save_images() method and default changes
+- **Commit error**: Previous commit claimed TO-DO.md was added but file was never created locally
 
 ## File Modification Best Practices
 

@@ -8,6 +8,8 @@
 
 A comprehensive Python client library for the Venice.ai API with automatic parameter validation, type safety, and support for all endpoints.
 
+![PyVenice Banner](src/pyvenice_oldschool_banner.png)
+
 ## ✨ Features
 
 - 🔧 **Automatic Parameter Validation** - Removes unsupported parameters based on model capabilities
@@ -26,6 +28,7 @@ pip install pyvenice
 ```
 
 For development:
+
 ```bash
 pip install pyvenice[dev]
 ```
@@ -126,7 +129,7 @@ asyncio.run(main())
 ## 🎯 Supported Endpoints
 
 - 💬 **Chat Completions** - `/chat/completions` with streaming and web search
-- 🎨 **Image Generation** - `/image/generate`, `/images/generations` 
+- 🎨 **Image Generation** - `/image/generate`, `/images/generations`
 - 🔍 **Image Upscaling** - `/image/upscale`
 - 🔊 **Text to Speech** - `/audio/speech` with streaming
 - 📊 **Embeddings** - `/embeddings`
@@ -204,7 +207,7 @@ PyVenice prioritizes security:
 - Minimal dependencies, all well-maintained and audited
 - Input validation prevents injection attacks
 
-For security concerns, please email kieran@bicheno.me or open an issue on GitHub
+For security concerns, please email [kieran@bicheno.me] or open an issue on GitHub
 
 ## 📚 Documentation
 
@@ -213,6 +216,7 @@ For detailed documentation, visit [our docs](https://github.com/TheLustriVA/PyVe
 ## 🙏 Acknowledgments
 
 Built with ❤️ using:
+
 - [httpx](https://github.com/encode/httpx) - Modern HTTP client
 - [pydantic](https://github.com/pydantic/pydantic) - Data validation
 - [Venice.ai](https://venice.ai) - The underlying API
