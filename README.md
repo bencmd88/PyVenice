@@ -8,7 +8,7 @@
 
 A comprehensive Python client library for the Venice.ai API with automatic parameter validation, type safety, and support for all endpoints.
 
-![PyVenice Banner](src/pyvenice_oldschool_banner.png)
+![PyVenice Banner](https://i.imgur.com/OsAkjoQ.png)
 
 ## ✨ Features
 
