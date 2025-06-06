@@ -209,7 +209,7 @@ For security concerns, please email kieran@bicheno.me or open an issue on GitHub
 
 ## 📚 Documentation
 
-For detailed documentation, visit [our docs](https://github.com/TheLustriVA/PyVenice#readme) or check out the [examples](examples/) directory.
+For detailed documentation, visit [our docs](https://github.com/TheLustriVA/PyVenice#readme) or check out the [examples](src/) directory.
 
 ## 🙏 Acknowledgments
 
