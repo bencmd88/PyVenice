@@ -4,8 +4,7 @@
 [![PyPI Version](https://img.shields.io/pypi/v/pyvenice)](https://pypi.org/project/pyvenice/)
 [![License](https://img.shields.io/github/license/TheLustriVA/PyVenice)](https://github.com/TheLustriVA/PyVenice/blob/main/LICENSE)
 [![Tests](https://img.shields.io/github/actions/workflow/status/TheLustriVA/PyVenice/tests.yml?branch=main&label=tests)](https://github.com/TheLustriVA/PyVenice/actions)
-[![Coverage](https://img.shields.io/codecov/c/github/TheLustriVA/PyVenice)](https://codecov.io/gh/TheLustriVA/PyVenice)
-[![Code Style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Code Style](https://img.shields.io/badge/code%20style-ruff-000000.svg)](https://github.com/charliermarsh/ruff)
 
 A comprehensive Python client library for the Venice.ai API with automatic parameter validation, type safety, and support for all endpoints.
 
