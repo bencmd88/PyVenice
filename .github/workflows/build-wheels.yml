@@ -9,29 +9,36 @@ on:
 
 jobs:
   build_wheels:
-    name: Build wheels on ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+    name: Build universal wheel (pure Python)
+    runs-on: ubuntu-latest
     
     steps:
     - uses: actions/checkout@v4
     
-    - name: Build wheels
-      uses: pypa/cibuildwheel@v2.16.2
-      env:
-        CIBW_ARCHS_LINUX: "x86_64 aarch64"
-        CIBW_ARCHS_MACOS: "x86_64 arm64"
-        CIBW_ARCHS_WINDOWS: "AMD64 ARM64"
-        CIBW_BUILD: "cp3{9,10,11,12}-*"
-        CIBW_SKIP: "pp* *-musllinux*"
-        CIBW_TEST_COMMAND: "python -c 'import pyvenice; print(\"OK\")'"
-        CIBW_BEFORE_ALL_LINUX: "yum install -y openssl-devel libffi-devel || apt-get update && apt-get install -y libssl-dev libffi-dev"
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+    
+    - name: Install build dependencies
+      run: |
+        pip install --upgrade pip
+        pip install build wheel
+    
+    - name: Build universal wheel
+      run: |
+        python -m build --wheel --outdir wheelhouse/
+        # Verify it's a universal wheel
+        ls -la wheelhouse/
+    
+    - name: Test wheel installation
+      run: |
+        pip install wheelhouse/*.whl
+        python -c "import pyvenice; print('✅ PyVenice installed successfully')"
     
     - uses: actions/upload-artifact@v4
       with:
-        name: cibw-wheels-${{ matrix.os }}-${{ strategy.job-index }}
+        name: universal-wheel
         path: ./wheelhouse/*.whl
 
   build_sdist:
@@ -60,7 +67,7 @@ jobs:
     steps:
     - uses: actions/download-artifact@v4
       with:
-        pattern: cibw-*
+        pattern: "*"
         path: dist
         merge-multiple: true
     

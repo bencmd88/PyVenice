@@ -58,17 +58,5 @@ dev = [
 [tool.setuptools]
 packages = ["pyvenice"]
 
-[tool.cibuildwheel]
-test-requires = "pytest"
-test-command = "pytest {project}/tests -x -v"
-build-verbosity = 1
-
-[tool.cibuildwheel.linux]
-before-all = "yum install -y openssl-devel libffi-devel || apt-get update && apt-get install -y libssl-dev libffi-dev"
-
-[tool.cibuildwheel.macos]
-environment = { MACOSX_DEPLOYMENT_TARGET = "11.0" }
-
-[tool.cibuildwheel.windows]
-before-build = "pip install delvewheel"
-repair-wheel-command = "delvewheel repair -w {dest_dir} {wheel}"
+# Note: PyVenice is a pure Python package - no compiled extensions
+# Universal wheels work across all platforms, no need for cibuildwheel
