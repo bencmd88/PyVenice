@@ -31,6 +31,18 @@ The library implements a **decorator-based validation pattern** that requires un
 3. **Endpoint modules** (chat.py, image.py, etc.) use the decorator to automatically filter unsupported parameters before API calls
 4. This prevents API errors when users pass parameters like `parallel_tool_calls` to models that don't support them
 
+## Distribution Infrastructure (v0.2.0+)
+
+**Multi-Platform Support**: Professional CI/CD pipeline with ARM64 wheel building solves Termux/Android installation issues:
+- GitHub Actions builds wheels for Linux/macOS/Windows on x86_64 and ARM64
+- Docker images published to GitHub Container Registry with multi-arch support
+- Conda-forge recipe ready for scientific Python ecosystem submission
+
+**Security Framework**: Automated vulnerability scanning and structured threat modeling:
+- Daily security scans with Safety, Bandit, Semgrep, pip-audit
+- Tiered security assessment (individual/corporate/nation-state threats)
+- Professional security documentation and incident response procedures
+
 ## Essential Commands
 
 ```bash
@@ -42,6 +54,13 @@ pip install -e .[dev]         # Include test dependencies
 ruff check .                   # Run linting checks
 ruff check --fix .            # Fix auto-fixable linting issues
 pytest tests/ -m "not integration" --cov=pyvenice --cov-report=term-missing  # Unit tests with coverage
+
+# Security scanning
+scripts/security-scan.sh      # Local security audit (Safety, Bandit, Semgrep)
+
+# Distribution testing
+cibuildwheel --platform linux --archs x86_64  # Test wheel building locally
+docker build -t pyvenice:test .               # Test Docker image build
 
 # Testing
 pytest tests/test_chat.py -v  # Run specific test module
@@ -79,11 +98,13 @@ python src/example_usage.py   # Comprehensive API demonstration
 
 ### Project Status & Notes
 
+- **v0.2.0 Release**: Professional CI/CD infrastructure with multi-platform support
+- **ARM64 Support**: Wheel building solves Android/Termux installation issues
+- **Security Framework**: Automated scanning with tiered threat assessment
+- **Distribution Ready**: Conda-forge recipe prepared, Docker images published
 - **CodeCov soft-disabled** due to lack of token no longer causes CI/CD to fail
 - **Development roadmap** moved to central project repository (not in this repo)
 - **Banner added** to README.md (src/pyvenice_oldschool_banner.png)
-- **Feature branch merged** successfully with save_images() method and default changes
-- **Commit error**: Previous commit claimed TO-DO.md was added but file was never created locally
 
 ## File Modification Best Practices
 
