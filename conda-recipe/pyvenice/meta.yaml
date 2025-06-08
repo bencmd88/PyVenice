@@ -1,0 +1,57 @@
+{% set name = "pyvenice" %}
+{% set version = "0.1.0" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/pyvenice-{{ version }}.tar.gz
+  sha256: fb78d8e112df0e67558bb4e5faaa740c35fa4cafac30afee3f03d2a0e26cc460
+
+build:
+  noarch: python
+  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+  number: 0
+
+requirements:
+  host:
+    - python >=3.12
+    - setuptools
+    - wheel
+    - pip
+  run:
+    - python >=3.12
+    - httpx >=0.27.0
+    - pydantic >=2.0.0
+    - python-dateutil >=2.8.0
+    - typing_extensions >=4.0.0
+
+test:
+  imports:
+    - pyvenice
+    - pyvenice.client
+    - pyvenice.chat
+    - pyvenice.image
+    - pyvenice.models
+  commands:
+    - pip check
+    - python -c "import pyvenice; print('PyVenice import successful')"
+  requires:
+    - pip
+
+about:
+  home: https://github.com/TheLustriVA/PyVenice
+  summary: A comprehensive Python client for the Venice.ai API with automatic parameter validation
+  description: |
+    PyVenice is a Python client library for the Venice.ai API with automatic parameter validation,
+    type safety, and support for all endpoints including chat completions, image generation,
+    embeddings, and more.
+  license: MIT
+  license_file: LICENSE
+  doc_url: https://github.com/TheLustriVA/PyVenice#readme
+  dev_url: https://github.com/TheLustriVA/PyVenice
+
+extra:
+  recipe-maintainers:
+    - TheLustriVA

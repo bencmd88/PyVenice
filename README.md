@@ -33,6 +33,10 @@ For development:
 pip install pyvenice[dev]
 ```
 
+### Troubleshooting Installation
+
+If you encounter build errors (especially on ARM64 Android/Termux), see our [Installation Troubleshooting Guide](docs/INSTALLATION_TROUBLESHOOTING.md).
+
 ## 🚀 Quick Start
 
 ```python

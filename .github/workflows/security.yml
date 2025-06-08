@@ -1,0 +1,94 @@
+name: Security Scan
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    - cron: '0 2 * * *'  # Daily at 2 AM UTC
+
+jobs:
+  security-scan:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+
+    - name: Install security tools
+      run: |
+        pip install --upgrade pip
+        pip install safety bandit semgrep pip-audit
+
+    - name: Create results directory
+      run: mkdir -p results
+
+    - name: Run Safety check (dependency vulnerabilities)
+      run: |
+        safety check --json --output results/safety.json || true
+        safety check --short-report
+
+    - name: Run pip-audit (dependency vulnerabilities)
+      run: |
+        pip-audit --format=json --output=results/pip-audit.json || true
+        pip-audit --desc
+
+    - name: Run Bandit (code security issues)
+      run: |
+        bandit -r pyvenice/ -f json -o results/bandit.json || true
+        bandit -r pyvenice/ -f txt
+
+    - name: Run Semgrep (static analysis)
+      run: |
+        semgrep --config=auto pyvenice/ --json --output=results/semgrep.json || true
+        semgrep --config=auto pyvenice/ --text
+
+    - name: Check for hardcoded secrets
+      run: |
+        echo "Scanning for potential secrets..."
+        if grep -r -i "password\|secret\|key\|token\|api_key" pyvenice/ --exclude-dir=__pycache__ || true; then
+          echo "⚠️  Potential secrets found - please review"
+        else
+          echo "✅ No obvious secrets detected"
+        fi
+
+    - name: Upload Security Results
+      uses: actions/upload-artifact@v4
+      with:
+        name: security-scan-results
+        path: results/
+        retention-days: 30
+
+    - name: Security Summary
+      run: |
+        echo "## Security Scan Summary" >> $GITHUB_STEP_SUMMARY
+        echo "- ✅ Safety check completed" >> $GITHUB_STEP_SUMMARY
+        echo "- ✅ pip-audit completed" >> $GITHUB_STEP_SUMMARY
+        echo "- ✅ Bandit static analysis completed" >> $GITHUB_STEP_SUMMARY
+        echo "- ✅ Semgrep analysis completed" >> $GITHUB_STEP_SUMMARY
+        echo "- ✅ Secret scanning completed" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "📁 Detailed results available in artifacts" >> $GITHUB_STEP_SUMMARY
+
+  dependency-review:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    
+    - name: Dependency Review
+      uses: actions/dependency-review-action@v3
+      with:
+        fail-on-severity: high
+        comment-summary-in-pr: true
