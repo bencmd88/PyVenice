@@ -38,6 +38,22 @@ jobs:
       run: |
         pytest -v -m "not integration" --cov=pyvenice --cov-report=xml --cov-report=term-missing
     
+    - name: Run model audit
+      run: |
+        python scripts/model-audit.py
+      env:
+        VENICE_API_KEY: ${{ secrets.VENICE_API_KEY }}
+        VENICE_ADMIN_KEY: ${{ secrets.VENICE_ADMIN_KEY }}
+      continue-on-error: true
+    
+    - name: Run response schema monitoring
+      run: |
+        python scripts/response-schema-monitor.py
+      env:
+        VENICE_API_KEY: ${{ secrets.VENICE_API_KEY }}
+        VENICE_ADMIN_KEY: ${{ secrets.VENICE_ADMIN_KEY }}
+      continue-on-error: true
+    
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
       with:

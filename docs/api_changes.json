@@ -1,0 +1,48 @@
+[
+  {
+    "timestamp": "2025-06-13T06:49:40.556032",
+    "version_change": {
+      "old": "20250528.001644",
+      "new": "20250612.151220"
+    },
+    "endpoints": {
+      "added": [],
+      "removed": [],
+      "modified": []
+    },
+    "schemas": {
+      "added": [],
+      "removed": [],
+      "modified": [
+        "ChatCompletionRequest",
+        "GenerateImageRequest",
+        "SimpleGenerateImageRequest",
+        "UpscaleImageRequest"
+      ]
+    },
+    "summary": "API changes detected: 4 modified schemas"
+  },
+  {
+    "timestamp": "2025-06-14T14:47:57.689168",
+    "version_change": {
+      "old": "20250612.151220",
+      "new": "20250612.151220"
+    },
+    "endpoints": {
+      "added": [],
+      "removed": [],
+      "modified": []
+    },
+    "schemas": {
+      "added": [],
+      "removed": [],
+      "modified": []
+    },
+    "parameters": {
+      "added": [],
+      "removed": [],
+      "modified": []
+    },
+    "summary": "No changes detected (version: 20250612.151220 \u2192 20250612.151220)"
+  }
+]

@@ -1,0 +1,14 @@
+{
+  "timestamp": "2025-06-14T14:41:50.323144",
+  "monitored_endpoints": 6,
+  "endpoints_with_changes": 0,
+  "schema_changes": {},
+  "current_schemas": {
+    "/models": "e91122e0a7a091bc93b166b9c4834efa",
+    "/chat/completions": "24a25a285ebe84f6ea525bddea5c011c",
+    "/image/generate": "b69ff0f536f5a9d68d7c441cb4d71042",
+    "/characters": "a70ca5c3e28f9bd578272cdc9500ee32",
+    "/models/compatibility_mapping": "d99faffeee544c18c5f4465d6b549e4e",
+    "/billing/usage": "32359b84f713ad07a7669691e9b8ef97"
+  }
+}

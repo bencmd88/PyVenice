@@ -173,17 +173,19 @@ def mock_billing_response():
     return {
         "data": [
             {
+                "timestamp": "2024-12-20T21:28:08.934Z",
+                "sku": "venice-uncensored-llm-output-mtoken",
+                "pricePerUnitUsd": 2.0,
+                "units": 0.000015,
                 "amount": 0.001,
                 "currency": "USD",
+                "notes": "API Inference",
                 "inferenceDetails": {
-                    "completionTokens": 15,
+                    "requestId": "test-inference-123",
+                    "inferenceExecutionTime": 1500,
                     "promptTokens": 10,
-                    "modelId": "venice-uncensored",
-                    "elapsedMs": 1500,
+                    "completionTokens": 15,
                 },
-                "inferenceId": "test-inference-123",
-                "createdAt": "2024-12-20T21:28:08.934Z",
-                "service": "chat",
             }
         ],
         "pagination": {"page": 1, "limit": 200, "total": 1, "total_pages": 1},
@@ -204,10 +206,23 @@ def integration_api_key():
 
 
 @pytest.fixture
+def integration_admin_key():
+    """Get real admin API key for integration tests."""
+    return os.environ.get("VENICE_ADMIN_KEY")
+
+
+@pytest.fixture
 def skip_if_no_api_key(integration_api_key):
     """Skip test if no real API key is available."""
     if not integration_api_key:
         pytest.skip("No VENICE_API_KEY environment variable set")
+
+
+@pytest.fixture
+def skip_if_no_admin_key(integration_admin_key):
+    """Skip test if no real admin API key is available."""
+    if not integration_admin_key:
+        pytest.skip("No VENICE_ADMIN_KEY environment variable set")
 
 
 # Error response fixtures

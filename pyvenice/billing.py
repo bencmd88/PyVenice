@@ -12,12 +12,10 @@ from .client import BaseResource
 class InferenceDetails(BaseModel):
     """Details about inference usage."""
 
-    completionTokens: Optional[float] = Field(
-        None, description="Completion tokens for LLM"
-    )
-    promptTokens: Optional[float] = Field(None, description="Prompt tokens for LLM")
-    modelId: Optional[str] = Field(None, description="Model ID used")
-    elapsedMs: Optional[float] = Field(None, description="Elapsed time in milliseconds")
+    requestId: Optional[str] = Field(None, description="Request identifier")
+    inferenceExecutionTime: Optional[int] = Field(None, description="Execution time in milliseconds")
+    promptTokens: Optional[int] = Field(None, description="Number of prompt tokens")
+    completionTokens: Optional[int] = Field(None, description="Number of completion tokens")
     imageCount: Optional[int] = Field(None, description="Number of images generated")
     imageDetails: Optional[Dict[str, Any]] = Field(
         None, description="Image generation details"
@@ -27,16 +25,19 @@ class InferenceDetails(BaseModel):
 class UsageEntry(BaseModel):
     """Single billing usage entry."""
 
+    timestamp: str = Field(description="Timestamp of usage")
+    sku: str = Field(description="SKU identifier")
+    pricePerUnitUsd: float = Field(description="Price per unit in USD")
+    units: float = Field(description="Number of units")
     amount: float = Field(description="Total amount charged")
     currency: Literal["USD", "VCU"] = Field(description="Currency type")
+    notes: str = Field(description="Usage notes")
     inferenceDetails: Optional[InferenceDetails] = None
-    inferenceId: str = Field(description="Inference ID")
-    createdAt: str = Field(description="Timestamp of usage")
-    modelId: Optional[str] = Field(None, description="Model ID used")
-    service: str = Field(description="Service type (e.g., 'chat', 'image')")
 
 
 class UsageResponse(BaseModel):
+    limit: Optional[int] = Field(None, description="limit")
+    page: Optional[int] = Field(None, description="page")
     """Response from billing usage endpoint."""
 
     data: List[UsageEntry]

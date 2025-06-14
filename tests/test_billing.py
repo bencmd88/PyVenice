@@ -40,7 +40,7 @@ class TestBilling:
         assert len(response.data) == 1
         assert response.data[0].amount == 0.001
         assert response.data[0].currency == "USD"
-        assert response.data[0].service == "chat"
+        assert response.data[0].sku == "venice-uncensored-llm-output-mtoken"
         assert response.pagination["total"] == 1
 
     @respx.mock
@@ -72,7 +72,7 @@ class TestBilling:
         assert "endDate=2024-01-02T00%3A00%3A00" in str(request.url)
 
         assert len(response.data) == 1
-        assert response.data[0].createdAt == "2024-12-20T21:28:08.934Z"
+        assert response.data[0].timestamp == "2024-12-20T21:28:08.934Z"
 
     @respx.mock
     def test_get_usage_with_pagination(self, respx_mock, mock_billing_response, client):
@@ -107,11 +107,14 @@ class TestBilling:
         mock_response = {
             "data": [
                 {
+                    "timestamp": "2024-01-01T12:00:00Z",
+                    "sku": "chat-completion-sku",
+                    "pricePerUnitUsd": 1.0,
+                    "units": 1.5,
                     "amount": 1.50,
                     "currency": "USD",
-                    "inferenceId": "test-inference-123",
-                    "createdAt": "2024-01-01T12:00:00Z",
-                    "service": "chat",
+                    "notes": "API Inference",
+                    "inferenceDetails": {"requestId": "test-inference-123", "inferenceExecutionTime": 500},
                 }
             ],
             "pagination": {"page": 1, "limit": 200, "total": 1, "total_pages": 1},
@@ -166,9 +169,9 @@ class TestErrorHandling:
 class TestBillingIntegration:
     """Integration tests for Billing (requires API key)."""
 
-    def test_real_usage_retrieval(self, skip_if_no_api_key, integration_api_key):
+    def test_real_usage_retrieval(self, skip_if_no_admin_key, integration_admin_key):
         """Test real usage data retrieval."""
-        client = VeniceClient(api_key=integration_api_key)
+        client = VeniceClient(api_key=integration_admin_key)
         billing = Billing(client)
 
         response = billing.get_usage(limit=5)
@@ -182,4 +185,5 @@ class TestBillingIntegration:
             usage_item = response.data[0]
             assert hasattr(usage_item, "amount")
             assert hasattr(usage_item, "currency")
-            assert hasattr(usage_item, "service")
+            assert hasattr(usage_item, "timestamp")
+            assert hasattr(usage_item, "sku")

@@ -102,6 +102,16 @@ class ImageGenerationResponse(BaseModel):
     images: List[str]  # Base64 encoded images
     request: Optional[Dict[str, Any]] = None
     timing: Optional[Dict[str, float]] = None
+    data: Optional[Any] = Field(None, description="data")
+    embed_exif_metadata: Optional[Any] = Field(None, description="embed_exif_metadata")
+    format: Optional[Any] = Field(None, description="format")
+    height: Optional[Any] = Field(None, description="height")
+    hide_watermark: Optional[str] = Field(None, description="hide_watermark")
+    model: Optional[Any] = Field(None, description="model")
+    prompt: Optional[Any] = Field(None, description="prompt")
+    return_binary: Optional[Any] = Field(None, description="return_binary")
+    safe_mode: Optional[Any] = Field(None, description="safe_mode")
+    seed: Optional[Any] = Field(None, description="seed")
 
 
 class OpenAIImageResponse(BaseModel):

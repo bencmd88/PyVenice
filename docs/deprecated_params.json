@@ -1,0 +1,20 @@
+{
+  "ChatCompletionRequest": {
+    "max_tokens": {
+      "removed_version": "20250612.151220",
+      "replacement": "max_completion_tokens",
+      "removal_date": "2025-07-15",
+      "behavior": "warn",
+      "description": "max_tokens is deprecated in favor of max_completion_tokens"
+    }
+  },
+  "GenerateImageRequest": {
+    "inpaint": {
+      "removed_version": "20250519.000000",
+      "replacement": null,
+      "removal_date": "2025-07-01",
+      "behavior": "remove",
+      "description": "Inpainting feature was disabled and will be revised"
+    }
+  }
+}

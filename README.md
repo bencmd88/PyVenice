@@ -21,6 +21,8 @@ A comprehensive Python client library for the Venice.ai API with automatic param
 - ⚙️ **Zero Configuration** - Sensible defaults with full customization
 - 🧪 **Thoroughly Tested** - 82% test coverage with comprehensive test suite
 
+Looking for Venice.ai access? Consider using my referreal code [https://venice.ai/chat?ref=0Y4qyR](https://venice.ai/chat?ref=0Y4qyR) or register at [venice.ai](https://venice.ai)
+
 ## 📦 Installation
 
 ```bash
