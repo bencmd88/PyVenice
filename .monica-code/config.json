@@ -1,0 +1,130 @@
+{
+  "customCommands": [
+    {
+      "name": "test",
+      "prompt": "{{{ input }}}\n\nWrite a comprehensive set of unit tests for the selected code. It should setup, run tests that check for correctness including important edge cases, and teardown. Ensure that the tests are complete and sophisticated. Give the tests just as chat output, don't edit any file.",
+      "description": "Write unit tests for highlighted code"
+    },
+    {
+      "name": "explain",
+      "prompt": "{{{ input }}}\n\nProvide a detailed explanation of this code with the following structure:\n\n1. **High-level overview**: Summarize what this code accomplishes in 1-2 sentences\n2. **Detailed breakdown**: Walk through the code step-by-step, explaining the purpose of each significant section\n3. **Key functions/components**: Explain the role of each important function, class, or component\n4. **Data flow**: Describe how data moves through the system\n5. **Key algorithms/patterns**: Identify and explain any important algorithms or design patterns used\n6. **Edge cases**: Note how the code handles boundary conditions or exceptional situations\n7. **Dependencies**: Identify external libraries or systems this code relies on\n8. **Potential improvements**: Suggest 2-3 ways this code could be enhanced or optimized\n\nUse concrete examples where helpful and relate technical concepts to practical outcomes.",
+      "description": "Get detailed explanation of code"
+    },
+    {
+      "name": "review",
+      "prompt": "{{{ input }}}\n\nPerform a thorough code review with the following structure:\n\n1. **CODE QUALITY**\n   - Assess naming, readability, and organization\n   - Evaluate documentation and comments\n   - Check for code duplication and complexity\n\n2. **ARCHITECTURE**\n   - Analyze design patterns and structure\n   - Evaluate separation of concerns\n   - Assess modularity and extensibility\n\n3. **PERFORMANCE**\n   - Identify potential bottlenecks\n   - Analyze time/space complexity\n   - Suggest specific optimizations\n\n4. **SECURITY & ROBUSTNESS**\n   - Highlight security vulnerabilities\n   - Identify error handling gaps\n   - Check for race conditions or threading issues\n\n5. **BUGS & EDGE CASES**\n   - Point out logical errors\n   - Identify unhandled edge cases\n\n6. **REFACTORING SUGGESTIONS**\n   - Provide specific, actionable recommendations with code examples\n\nFocus on substantive issues rather than stylistic preferences.",
+      "description": "Get comprehensive code review"
+    },
+    {
+      "name": "refactor",
+      "prompt": "{{{ input }}}\n\nRefactor this code to improve its quality while preserving functionality. Focus on:\n\n1. Improving readability and maintainability\n2. Reducing complexity and enhancing modularity\n3. Eliminating code duplication\n4. Optimizing performance where possible\n5. Strengthening error handling and edge cases\n6. Following language-specific best practices\n\nProvide the refactored code with comments explaining your key changes and the reasoning behind them. For significant architectural changes, explain the benefits they provide.",
+      "description": "Refactor and improve code quality"
+    },
+    {
+      "name": "docs",
+      "prompt": "{{{ input }}}\n\nGenerate comprehensive documentation for this code following industry best practices. Include:\n\n1. **Overview**: Brief description of purpose and functionality\n2. **API Reference**: For each public function/method/class:\n   - Description of purpose\n   - Parameters with types and descriptions\n   - Return values with types and descriptions\n   - Exceptions/errors that may be thrown\n3. **Usage Examples**: Practical examples demonstrating typical use cases\n4. **Dependencies**: Required libraries or systems\n5. **Installation/Setup**: Any necessary configuration\n6. **Common Pitfalls**: Issues to watch out for\n\nFormat the documentation in a clear, structured manner appropriate for the language/framework.",
+      "description": "Generate complete documentation"
+    },
+    {
+      "name": "debug",
+      "prompt": "{{{ input }}}\n\nAnalyze this code for bugs and issues with a systematic approach:\n\n1. **Identify potential bugs**: Look for logical errors, off-by-one errors, incorrect conditionals, and other common mistakes\n2. **Analyze edge cases**: Determine how the code handles empty inputs, large values, boundary conditions, and unexpected inputs\n3. **Check resource management**: Identify potential memory leaks, resource exhaustion, or cleanup issues\n4. **Evaluate concurrency**: Find race conditions, deadlocks, or thread safety issues if applicable\n5. **Assess error handling**: Examine how exceptions and errors are caught and managed\n6. **Trace execution flow**: Walk through the code execution step-by-step focusing on problematic areas\n\nFor each issue identified, provide:\n- A clear explanation of the problem\n- The specific location in the code\n- Why it's problematic\n- A concrete fix with code examples",
+      "description": "Find and fix bugs in code"
+    },
+    {
+      "name": "optimize",
+      "prompt": "{{{ input }}}\n\nOptimize this code for maximum performance while maintaining readability and correctness. Focus on:\n\n1. **Algorithmic efficiency**: Identify and improve suboptimal algorithms\n2. **Time complexity**: Reduce computational overhead\n3. **Space complexity**: Minimize memory usage\n4. **I/O operations**: Optimize file, network, or database interactions\n5. **Resource utilization**: Improve CPU, memory, or disk usage\n6. **Caching opportunities**: Identify where caching could improve performance\n7. **Language-specific optimizations**: Use language features that enhance performance\n\nFor each optimization:\n- Explain the current performance bottleneck\n- Provide optimized code\n- Quantify expected performance improvements (if possible)\n- Note any tradeoffs made",
+      "description": "Optimize code for performance"
+    }
+  ],
+  "contextProviders": [
+    {
+      "name": "currentFile",
+      "params": {
+        "includeProject": true,
+        "maxTokens": 12000,
+        "includeImports": true
+      }
+    },
+    {
+      "name": "diff",
+      "params": {
+        "includeDiff": true,
+        "maxTokens": 6000,
+        "includeContext": true,
+        "maxFiles": 10
+      }
+    },
+    {
+      "name": "terminal",
+      "params": {
+        "maxLines": 200,
+        "includeCommands": true,
+        "includeOutputs": true,
+        "recentOnly": true
+      }
+    },
+    {
+      "name": "problems",
+      "params": {
+        "includeErrors": true,
+        "includeWarnings": true,
+        "includeInfos": false,
+        "maxProblems": 100,
+        "groupBySeverity": true,
+        "groupByFile": true
+      }
+    },
+    {
+      "name": "folder",
+      "params": {
+        "path": ".",
+        "excludePatterns": ["node_modules", ".git", "dist", "build", ".cache", "*.log"],
+        "maxDepth": 4,
+        "showHidden": false,
+        "includeDetails": true
+      }
+    },
+    {
+      "name": "codebase",
+      "params": {
+        "searchType": "semantic",
+        "maxResults": 15,
+        "maxTokens": 10000,
+        "excludePatterns": ["node_modules", ".git", "dist", "build"],
+        "includeComments": true,
+        "includeTests": true
+      }
+    },
+    {
+      "name": "url",
+      "params": {
+        "maxTokens": 8000,
+        "allowedDomains": ["github.com", "stackoverflow.com", "developer.mozilla.org", "docs.microsoft.com", "docs.python.org", "reactjs.org", "vuejs.org", "angular.io"],
+        "includeHtml": false,
+        "extractMainContent": true
+      }
+    }
+  ],
+  "slashCommands": [
+    {
+      "name": "edit",
+      "description": "Edit selected code"
+    },
+    {
+      "name": "comment",
+      "description": "Write comments for the selected code"
+    },
+    {
+      "name": "share",
+      "description": "Export the current chat session to markdown"
+    },
+    {
+      "name": "cmd",
+      "description": "Generate a shell command"
+    },
+    {
+      "name": "commit",
+      "description": "Generate a git commit message"
+    }
+  ]
+}
